@@ -3,8 +3,7 @@
 @section('content')
 <nav class="text-sm text-gray-600 px-4 sm:px-8 md:px-14 mt-4 py-2">
   <a href="{{ route('home_page') }}" class="hover:underline text-blue-600">Home</a> / 
-  <a href="{{ route('tampilKategori', 'rice-cooker') }}" class="hover:underline text-blue-600">Rice Cooker</a> / 
-  <span class="text-gray-800 font-medium">Elite Platinum</span>
+  <span class="text-gray-800 font-medium">{{ $product['name'] }}</span>
 </nav>
 
 <main class="my-10 px-4 sm:px-6 md:px-10 lg:px-20">
@@ -12,23 +11,24 @@
     
     <!-- Image Section -->
     <div class="w-full md:w-1/2 bg-gray-100 rounded-lg p-4 flex justify-center items-center">
-      <img src="{{ asset('image/15.png') }}" alt="Elite Platinum" class="object-cover max-h-[420px] w-full max-w-md" />
+      <img src="{{ asset($product['image_path']) }}" alt="{{ $product['name'] }}" class="object-cover max-h-[420px] w-full max-w-md" />
     </div>
 
     <!-- Product Details -->
     <div class="w-full md:w-1/2 md:pl-10">
-      <h2 class="text-2xl font-bold mb-2">Elite Platinum</h2>
+      <h2 class="text-2xl font-bold mb-2">{{ $product['name'] }}</h2>
       <div class="flex items-center gap-2 text-yellow-500 text-sm mb-2">
-        <span class="ml-2 text-green-600 text-sm">50 stock</span>
+        <span class="ml-2 text-green-600 text-sm">{{ $product['stock'] }} stock</span> <!-- Display stock dynamically -->
       </div>
-      <p class="text-xl font-sans mb-4">Rp 192000</p>
+      <p class="text-xl font-sans mb-4">Rp {{ number_format($product['price'], 2, ',', '.') }}</p> <!-- Format price dynamically -->
       <p class="text-gray-700 text-sm leading-relaxed mb-4">
-        This electric pressure cooker is a modern cooking experience that utilizes high pressure to speed up the cooking process...
+        {{ $product['description'] }} <!-- Display product description dynamically -->
       </p>
 
       <hr class="my-2">
-      <p class="mb-2"><span class="font-medium">Material:</span> Stainless</p>
-      <p class="mb-4"><span class="font-medium">Feature:</span> LED digital panels</p>
+      <p class="mb-2"><span class="font-medium">Category:</span> {{ $product['category'] }}</p> <!-- Display category dynamically -->
+      <p class="mb-2"><span class="font-medium">Material:</span> {{ $product['material'] }}</p> <!-- Display material dynamically -->
+      <p class="mb-4"><span class="font-medium">Feature:</span> {{ $product['feature'] }}</p> <!-- Display feature dynamically -->
 
       <!-- Quantity & Buy Button -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
@@ -52,19 +52,8 @@
     </div>
   </div>
 </main>
-<script>
-    function toggleDropdown() {
-      const dropdown = document.getElementById("accountDropdown");
-      dropdown.classList.toggle("hidden");
-    }
-    window.addEventListener("click", function(e) {
-      const dropdown = document.getElementById("accountDropdown");
-      const profileIcon = document.querySelector(".bx-user");
-      if (!dropdown.contains(e.target) && !profileIcon.contains(e.target)) {
-        dropdown.classList.add("hidden");
-      }
-    });
 
+<script>
     const sub = document.querySelector(".sub");
     const add = document.querySelector(".add");
     const value = document.querySelector(".value");
@@ -82,5 +71,5 @@
         value.innerHTML = TotalValue;
       }
     };
-  </script>
+</script>
 @endsection
