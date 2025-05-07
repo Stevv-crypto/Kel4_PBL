@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DetailproductController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,3 +35,7 @@ Route::get('contact', function () {
 });
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');;
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');

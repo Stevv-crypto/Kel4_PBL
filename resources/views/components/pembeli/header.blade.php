@@ -29,7 +29,7 @@
             </div>
 
             <div class="nav-icon flex items-center gap-6 text-xl text-black">
-                <a href="keranjang.php"><i class='bx bx-cart-alt'></i></a>
+                <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>
                 <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
             </div>
         </div>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="flex items-center gap-6 text-xl text-black mt-2">
-            <a href="keranjang.php"><i class='bx bx-cart-alt'></i></a>
+            <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>
             <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
         </div>
     </div>
