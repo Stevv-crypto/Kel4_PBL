@@ -1,16 +1,27 @@
-
 <header class="header">
     <div class="top-header"></div>
-    <div class="navbar flex justify-between items-center bg-[#b0cee3] px-8 py-3">
-        <div class="logo font-bold text-lg ml-6">E-TechnoCart</div>
+    <div class="navbar flex justify-between items-center bg-[#b0cee3] px-6 py-3">
 
-        <nav class="menu flex gap-8 mr-16">
-            <a href="{{ route('home_page') }}" class="text-black text-base hover:text-gray-700 font-semibold underline">Home</a>
-            <a href="{{ route('contact') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
-            <a href="{{ route('about') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">About</a>
+        <!-- Logo -->
+        <div class="logo font-bold text-lg">E-TechnoCart</div>
+
+        <!-- Hamburger Menu Icon (mobile) -->
+        <div class="md:hidden text-2xl cursor-pointer" onclick="toggleMobileMenu()">
+            <i class='bx bx-menu'></i>
+        </div>
+
+        <!-- Desktop Menu -->
+        <nav class="menu hidden md:flex gap-8">
+        <a href="{{ route('home_page') }}"
+                class="text-black text-base hover:text-gray-700 hover:underline font-medium">Home</a>
+            <a href="{{ route('contact') }}"
+                class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
+            <a href="{{ route('about') }}"
+                class="text-black text-base hover:text-gray-700 hover:underline font-medium">About</a>
         </nav>
 
-        <div class="actions flex items-center gap-16 ml-24">
+        <!-- Search & Actions -->
+        <div class="actions hidden md:flex items-center gap-8">
             <div class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
                 <input type="text" id="search" placeholder="What are you looking for?"
                     class="bg-transparent border-none text-sm placeholder-gray-500 w-48 px-2 py-1 focus:outline-none" />
@@ -18,36 +29,52 @@
             </div>
 
             <div class="nav-icon flex items-center gap-6 text-xl text-black">
-                <a href="#"><i class='bx bx-cart-alt'></i></a>
+                <a href="keranjang.php"><i class='bx bx-cart-alt'></i></a>
                 <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
             </div>
         </div>
     </div>
-</header>
 
-<!-- Account Dropdown -->
-<div class="account-dropdown absolute right-6 top-20 bg-gray-300/50 border border-gray-300 rounded-lg w-52 shadow-lg z-50 hidden"
-    id="accountDropdown">
-    <div class="option px-4 py-3 hover:bg-gray-100">
-        <a href="{{ route('profile') }}" class="flex items-center gap-3 text-gray-800 text-sm">
-            <i class='bx bx-user'></i> <span>Manage My Account</span>
-        </a>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu"
+        class="hidden flex flex-col gap-4 bg-[#b0cee3] px-6 py-4 md:hidden border-t border-gray-300">
+
+        <a href="{{ route('home_page') }}" class="text-black text-base font-medium">Home</a>
+        <a href="{{ route('contact') }}" class="text-black text-base font-medium">Contact</a>
+        <a href="{{ route('about') }}" class="text-black text-base font-medium">About</a>
+
+        <div class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
+            <input type="text" id="searchMobile" placeholder="Search..."
+                class="bg-transparent border-none text-sm placeholder-gray-500 w-full px-2 py-1 focus:outline-none" />
+            <i class='bx bx-search icon absolute right-2 text-base text-black'></i>
+        </div>
+
+        <div class="flex items-center gap-6 text-xl text-black mt-2">
+            <a href="keranjang.php"><i class='bx bx-cart-alt'></i></a>
+            <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
+        </div>
     </div>
-    <div class="option px-4 py-3 hover:bg-gray-100">
-        <a href="#" class="flex items-center gap-3 text-gray-800 text-sm">
-            <i class='bx bxl-shopify'></i> <span>My Order</span>
-        </a>
+
+    <!-- Akun Dropdown -->
+    <div id="accountDropdown"
+        class="account-dropdown absolute right-6 top-20 bg-gray-300/50 border border-gray-300 rounded-lg w-52 shadow-lg z-50 hidden">
+        <div class="option px-4 py-3 hover:bg-gray-100">
+        <a href="{{ route('profile') }}" class="flex items-center gap-3 text-gray-800 text-sm ">
+                <i class='bx bx-user'></i> <span>Manage My Account</span>
+            </a>
+        </div>
+        <div class="option px-4 py-3 hover:bg-gray-100">
+            <a href="my-orders.php" class="flex items-center gap-3 text-gray-800 text-sm">
+                <i class='bx bxl-shopify'></i> <span>My Order</span>
+            </a>
+        </div>
+        <div class="option px-4 py-3 hover:bg-gray-100">
+            <a href="logout.php" class="flex items-center gap-3 text-red-800 text-sm">
+                <i class='bx bx-log-out'></i> <span>Logout</span>
+            </a>
+        </div>
     </div>
-    <div class="option px-4 py-3 hover:bg-gray-100">
-        <a href="#" class="flex items-center gap-3 text-red-800 text-sm" 
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class='bx bx-log-out'></i> <span>Logout</span>
-        </a>
-        <form id="logout-form" action="#" method="POST" class="hidden">
-            @csrf
-        </form>
-    </div>
-</div>
+</header>
 
 <script>
     // Toggle dropdown
@@ -59,10 +86,22 @@
     // Close dropdown when clicking outside
     window.addEventListener("click", function (e) {
         const dropdown = document.getElementById("accountDropdown");
-        const profileIcon = document.querySelector(".bx-user");
+        const profileIcon = document.querySelectorAll(".bx-user");
 
-        if (!dropdown.contains(e.target) && !profileIcon.contains(e.target)) {
+        // Check semua icon bx-user
+        let isUserIcon = false;
+        profileIcon.forEach(icon => {
+            if (icon.contains(e.target)) isUserIcon = true;
+        });
+
+        if (!dropdown.contains(e.target) && !isUserIcon) {
             dropdown.classList.add("hidden");
         }
     });
+
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById("mobileMenu");
+        mobileMenu.classList.toggle("hidden");
+    }
 </script>
