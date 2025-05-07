@@ -47,3 +47,4 @@ Route::get('/detail_product', [DetailproductController::class, 'detail'])->name(
 Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');

@@ -39,48 +39,6 @@ class ProductController extends Controller
                 'name' => 'Dispenser-Philips',
                 'price' => 1500000,
             ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/13.png',
-                'name' => 'Fan',
-                'price' => 120000,
-            ],
         ];
 
         return view('pages.pembeli.home_page', compact('featuredProducts'));
