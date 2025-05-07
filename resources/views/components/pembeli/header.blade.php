@@ -6,8 +6,8 @@
 
         <nav class="menu flex gap-8 mr-16">
             <a href="{{ route('home_page') }}" class="text-black text-base hover:text-gray-700 font-semibold underline">Home</a>
-            <a href="#" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
-            <a href="#" class="text-black text-base hover:text-gray-700 hover:underline font-medium">About</a>
+            <a href="{{ route('contact') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
+            <a href="{{ route('about') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">About</a>
         </nav>
 
         <div class="actions flex items-center gap-16 ml-24">
@@ -29,7 +29,7 @@
 <div class="account-dropdown absolute right-6 top-20 bg-gray-300/50 border border-gray-300 rounded-lg w-52 shadow-lg z-50 hidden"
     id="accountDropdown">
     <div class="option px-4 py-3 hover:bg-gray-100">
-        <a href="#" class="flex items-center gap-3 text-gray-800 text-sm">
+        <a href="{{ route('profile') }}" class="flex items-center gap-3 text-gray-800 text-sm">
             <i class='bx bx-user'></i> <span>Manage My Account</span>
         </a>
     </div>
