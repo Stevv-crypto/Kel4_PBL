@@ -18,19 +18,48 @@
 
 <script>
     function addToCart(productId) {
-        // You can implement AJAX request to add product to cart
-        // Example:
-        /*
-        axios.post('/cart/add', {
-            product_id: productId,
-            quantity: 1
+        fetch(`/cart/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
         })
         .then(response => {
-            // Handle success
+            if (!response.ok) {
+                throw new Error('Gagal menambahkan ke keranjang.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message); // Ganti jadi notifikasi UI kalau mau
         })
         .catch(error => {
-            // Handle error
+            console.error(error);
+            alert('Terjadi kesalahan saat menambahkan produk ke keranjang.');
         });
-        */
+    }
+</script>
+<script>
+    function addToCart(productId) {
+        fetch(`/cart/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || 'Gagal tambah ke keranjang'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message || 'Berhasil ditambahkan ke keranjang!');
+        })
+        .catch(error => {
+            console.error(error);
+            alert(error.message || 'Terjadi kesalahan saat menambahkan produk.');
+        });
     }
 </script>
