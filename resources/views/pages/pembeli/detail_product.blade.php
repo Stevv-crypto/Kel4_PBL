@@ -30,15 +30,24 @@
       <p class="mb-2"><span class="font-medium">Material:</span> {{ $product['material'] }}</p> <!-- Display material dynamically -->
       <p class="mb-4"><span class="font-medium">Feature:</span> {{ $product['feature'] }}</p> <!-- Display feature dynamically -->
 
-      <!-- Quantity & Buy Button -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-        <div class="wrapper flex border border-gray-400 rounded overflow-hidden text-black">
-          <div class="sub px-4 py-2 text-xl cursor-pointer hover:bg-gray-100">−</div>
-          <div class="value w-12 text-center border-l border-r border-gray-400 py-2">2</div>
-          <div class="add px-4 py-2 text-xl cursor-pointer bg-blue-500 hover:bg-blue-600 text-white">+</div>
+      <!-- Add to Cart Section -->
+      <form action="{{ route('cart.add', ['productId' => $product['id']]) }}" method="POST" class="flex items-center gap-4">
+        @csrf
+        <!-- Hidden Input for Product ID -->
+        <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+        <!-- Quantity Control -->
+        <div class="flex items-center border border-gray-400 rounded overflow-hidden">
+          <button type="button" class="sub px-4 py-2 text-xl cursor-pointer hover:bg-gray-100">−</button>
+          <div class="value w-12 text-center border-l border-r border-gray-400 py-2">1</div>
+          <button type="button" class="add px-4 py-2 text-xl cursor-pointer bg-blue-500 hover:bg-blue-600 text-white">+</button>
         </div>
-        <a href="{{ route('cart') }}" class="w-full sm:w-40 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 text-center">Add To Cart</a>
-      </div>
+        <!-- Hidden Input for Quantity -->
+        <input type="hidden" name="quantity" id="quantity-input" value="1">
+        <!-- Submit Button -->
+        <button type="submit" class="w-full sm:w-40 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 text-center">
+          Add To Cart
+        </button>
+      </form>
 
       <!-- Delivery & Guarantee -->
       <div class="bg-[#b0cee3] p-4 rounded-lg mb-2">
@@ -57,19 +66,26 @@
     const sub = document.querySelector(".sub");
     const add = document.querySelector(".add");
     const value = document.querySelector(".value");
-    
-    let TotalValue = 1;
-    value.innerHTML = TotalValue;
+    const quantityInput = document.querySelector("#quantity-input");
 
-    add.onclick = () => {
-      TotalValue++;
-      value.innerHTML = TotalValue;
-    };
+    let totalQuantity = 1;
+    value.innerHTML = totalQuantity;
+
+    // Decrease quantity when "−" is clicked
     sub.onclick = () => {
-      if (TotalValue > 1) {
-        TotalValue--;
-        value.innerHTML = TotalValue;
+      if (totalQuantity > 1) {
+        totalQuantity--;
+        value.innerHTML = totalQuantity;
+        quantityInput.value = totalQuantity; // Update hidden input
       }
     };
+
+    // Increase quantity when "+" is clicked
+    add.onclick = () => {
+      totalQuantity++;
+      value.innerHTML = totalQuantity;
+      quantityInput.value = totalQuantity; // Update hidden input
+    };
 </script>
+
 @endsection
