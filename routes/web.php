@@ -36,8 +36,8 @@ Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('re
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');;
-//Route::get('/cart', [CartController::class, 'index'])->name('cart');
-//Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
 Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');;
 Route::get('category', [ProductController::class, 'tampilKategori'])->name('category');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
@@ -46,15 +46,14 @@ Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/product', [productController::class, 'tampilProduk'])->name('products');
 Route::get('/viewAll', [viewAllController::class, 'tampilProduk'])->name('viewAll');
-//Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
 Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');
 
-//cart
 Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add'); 
 Route::get('/cart', [CartController::class, 'showCart'])->name('cart'); 
 Route::put('/cart/update/{productId}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
 Route::delete('/cart/remove/{productId}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
 Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
+
 
 //Admin route//
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
