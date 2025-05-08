@@ -11,7 +11,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InboxController;
 
 
 Route::get('/', function () {
@@ -47,3 +48,8 @@ Route::get('/product', [productController::class, 'tampilProduk'])->name('produc
 Route::get('/viewAll', [viewAllController::class, 'tampilProduk'])->name('viewAll');
 Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
 Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');
+
+//Admin route//
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/inbox', [InboxController::class, 'index'])->name('inbox');
+Route::post('/inbox/send-message', [InboxController::class, 'sendMessage'])->name('inbox.send-message');
