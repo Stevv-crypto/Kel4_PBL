@@ -13,6 +13,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SalesController;
 
 
 Route::get('/', function () {
@@ -30,6 +32,8 @@ Route::get('about', function () {
 Route::get('contact', function () {
     return view('pages/contact');
 });
+
+
 
 Route::get('/login', [loginController::class, 'tampilLogin'])->name('login');
 Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('register');
@@ -59,3 +63,7 @@ Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clea
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/inbox', [InboxController::class, 'index'])->name('inbox');
 Route::post('/inbox/send-message', [InboxController::class, 'sendMessage'])->name('inbox.send-message');
+
+Route::get('/order', [OrderController::class, 'order'])->name('order');
+
+Route::get('/sales', [SalesController::class, 'sales'])->name('sales');
