@@ -79,4 +79,14 @@ class CartController extends Controller
         session()->forget('cart');
         return redirect()->route('cart');
     }
+    
+    public function checkout()
+    {
+        $cart = session()->get('cart', []);
+        $total = array_reduce($cart, function ($carry, $item) {
+            return $carry + ($item['price'] * $item['quantity']);
+        }, 0);
+
+        return view('pages.pembeli.checkout', compact('cart', 'total'));
+    }
 }
