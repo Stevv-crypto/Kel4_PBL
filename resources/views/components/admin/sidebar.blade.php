@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('manage_product.index') }}"
                    class="flex items-center p-3 rounded-lg {{ request()->routeIs('manage_product') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                     <i class="fas fa-cubes mr-3"></i> Manage Products
                 </a>
@@ -59,7 +59,7 @@
                 </li>
                 
                 <li>
-                    <a href="#"
+                    <a href="{{ route('team.index') }}"
                        class="flex items-center p-3 rounded-lg {{ request()->routeIs('team') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                         <i class="fas fa-users mr-3"></i> Team
                     </a>
