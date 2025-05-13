@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+
+// Namespace Pembeli
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
@@ -17,7 +19,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\TimController;
+use App\Http\Controllers\ProductAdminController;
 
+// Namespace Penjual
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,11 +55,24 @@ Route::get('/productAdmin', function() {
     return view('pages/admin/productAdmin');
 });
 
+Route::get('/editProduk', function() {
+    return view('pages/admin/editProduk');
+});
+
+Route::get('/setting', function() {
+    return view('pages/admin/setting');
+});
+
+Route::get('/manage_product2', function() {
+    return view('pages/admin/manage_product2');
+});
+
 Route::get('/login', [loginController::class, 'tampilLogin'])->name('login');
 Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('register');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');;
+Route::get('/productAdmin', [ProductAdminController::class, 'tampilProduk'])->name('produkAdmin');;
 //Route::get('/cart', [CartController::class, 'index'])->name('cart'); gk dipakai
 //Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout'); gk dipakai
 Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');;

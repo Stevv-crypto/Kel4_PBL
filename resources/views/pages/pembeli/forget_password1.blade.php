@@ -12,8 +12,8 @@
 
     <!-- Form Registrasi -->
     <div class="w-2/5 bg-[#ACC8DD] px-8 py-[150px] rounded-xl shadow-md">
-        <h2 class="text-2xl font-semibold text-center -mt-12">Create an account</h2>
-        <p class="text-sm text-center mt-4 text-gray-700">Enter your details below</p>
+        <h2 class="text-2xl font-semibold text-center -mt-12">Forgot Password</h2>
+        <p class="text-sm text-center mt-4 text-gray-700">Enter your emai</p>
         <form class="space-y-8 mt-12">
             <input type="email" placeholder="Email" class="w-full py-2 px-3 bg-transparent border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 placeholder-gray-500">
             <div class="flex justify-between space-x-4 items-center w-full">
