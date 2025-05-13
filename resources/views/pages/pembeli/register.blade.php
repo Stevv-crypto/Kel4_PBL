@@ -20,7 +20,7 @@
             <a href="/login" class="block w-full bg-[#70B9EA] text-white py-2 rounded-md text-center hover:bg-blue-600 transition-colors">Create Account</a>
         </form>
         <p class="mt-4 text-sm text-center text-gray-700"> Already have an account?
-            <a href="/login" class="text-blue-600 underline">Log in</a>
+            <a href="/login" class="text-blue-600 underline">Login</a>
         </p>
     </div>
 </section>

@@ -68,7 +68,7 @@
         </div>
 
         <!-- Proceed to Checkout Button -->
-        <a href="#" class="block w-full bg-sky-400 hover:bg-sky-500 text-white font-medium py-2 rounded text-center mt-4">Proceed to checkout</a>
+        <a href="checkout" class="block w-full bg-sky-400 hover:bg-sky-500 text-white font-medium py-2 rounded text-center mt-4">Proceed to checkout</a>
     </div>
 </section>
 @endsection

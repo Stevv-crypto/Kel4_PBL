@@ -35,13 +35,13 @@
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('order') }}"
                    class="flex items-center p-3 rounded-lg {{ request()->routeIs('order') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                     <i class="fas fa-list mr-3"></i> Order Lists
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('manage_product.index') }}"
                    class="flex items-center p-3 rounded-lg {{ request()->routeIs('manage_product') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                     <i class="fas fa-cubes mr-3"></i> Manage Products
                 </a>
@@ -52,13 +52,14 @@
             <h3 class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2 ml-2">Management</h3>
             <ul class="space-y-2">
                 <li>
-                    <a href="#"
-                       class="flex items-center p-3 rounded-lg {{ request()->routeIs('sales_report') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
+                    <a href="{{ route('sales') }}"
+                       class="flex items-center p-3 rounded-lg {{ request()->routeIs('sales') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                         <i class="fas fa-chart-line mr-3"></i> Sales Report
                     </a>
                 </li>
+                
                 <li>
-                    <a href="#"
+                    <a href="{{ route('team.index') }}"
                        class="flex items-center p-3 rounded-lg {{ request()->routeIs('team') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                         <i class="fas fa-users mr-3"></i> Team
                     </a>
