@@ -1,6 +1,5 @@
-<header class="header">
-    <div class="top-header"></div>
-    <div class="navbar flex justify-between items-center bg-[#b0cee3] px-6 py-3">
+<header class="top-0 z-1000">
+    <div class="flex justify-between items-center bg-[#b0cee3] px-6 py-3">
 
         <!-- Logo -->
         <div class="logo font-bold text-lg">E-TechnoCart</div>

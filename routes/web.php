@@ -31,6 +31,10 @@ Route::get('contact', function () {
     return view('pages/contact');
 });
 
+Route::get('/orderList', function(){
+    return view('pages/pembeli/orderList');
+});
+
 Route::get('/login', [loginController::class, 'tampilLogin'])->name('login');
 Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('register');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');

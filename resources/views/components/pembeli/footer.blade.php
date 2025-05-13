@@ -1,5 +1,5 @@
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white mt-10">
+  <footer class="bg-gray-800 text-white">
   <div class="container mx-auto px-4 py-8">
     <!-- Grid untuk Konten Utama Footer -->
     <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
