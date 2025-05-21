@@ -63,7 +63,7 @@
             </a>
         </div>
         <div class="option px-4 py-3 hover:bg-gray-100">
-            <a href="/orderList" class="flex items-center gap-3 text-gray-800 text-sm">
+            <a href="orderList" class="flex items-center gap-3 text-gray-800 text-sm">
                 <i class='bx bxl-shopify'></i> <span>My Order</span>
             </a>
         </div>

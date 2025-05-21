@@ -1,91 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Order List</title>
-</head>
-<body class="bg-gray-100 font-sans">
-    @include('components.pembeli.header')
+@extends('layouts.app')
 
-    <div class="container mx-auto px-6 py-4 text-gray-600 text-sm ">
-        Home / My Account
-    </div>
+@section('content')
 
-    <!-- Main -->
-    <main class="container mx-auto px-6 flex gap-10 mb-10">
+<!-- Wrapper Utama Grid 2 Kolom -->
+<div class="flex flex-col md:flex-row min-h-screen">
 
-        <!-- Sidebar -->
-         <aside class="w-1/4 mt-28">
-            <h2 class="font-semibold mb-4">Manage Account</h2>
-            <p class="ml-16">My Profile</p>
-            <h2 class="font-semibold mb-4 mt-4">My Order</h2>
-            <p class="ml-16">List Order</p>
-         </aside>
+    <!-- Sidebar -->
+    <aside class="w-full md:w-1/3 mt-8 md:mt-12 px-6 md:px-10">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-3 mb-8">
+            <a href="home_page" class="text-black hover:underline opacity-50">Home</a>
+            <div class="h-4 border-l border-gray-500 opacity-70 rotate-45"></div>
+            <a href="{{ route('profile') }}" class="text-black hover:underline">My Orders</a>
+        </nav>
 
-        <!-- Content -->
-        <section class="w-3/4 mt-20">
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <table class="w-full text-left">
+        <!-- Sidebar Menu -->
+        <div class="flex flex-col gap-6">
+            <!-- Manage Account -->
+            <div>
+                <h3 class="text-black font-semibold">My Account</h3>
+                <a href="{{ route('profile') }}" class="text-blue-500 hover:underline block mt-1">My Profile</a>
+            </div>
+
+            <!-- Orders -->
+            <div>
+                <h3 class="text-black font-semibold">My Orders</h3>
+                <a href="/orderList" class="text-blue-500 hover:underline block mt-1">List Order</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="w-full md:w-2/3 mt-12 px-4 md:px-6">
+        <section class="w-full">
+            <div class="bg-white rounded-lg shadow overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
                     <thead class="bg-gray-200 text-gray-700">
                         <tr>
-                            <th class="px-6 py-3">Product</th>
-                            <th class="px-6 py-3">Price</th>
-                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3 whitespace-nowrap">Product</th>
+                            <th class="px-6 py-3 whitespace-nowrap">Price</th>
+                            <th class="px-6 py-3 whitespace-nowrap">Status</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
+                        @php
+                            $orders = [
+                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Finish', 'bg' => 'bg-teal-400'],
+                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Confirm', 'bg' => 'bg-green-500'],
+                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Process', 'bg' => 'bg-amber-400'],
+                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Rejected', 'bg' => 'bg-red-500'],
+                            ];
+                        @endphp
+
+                        @foreach ($orders as $order)
                         <tr class="border-b">
-                            <td class="flex items-center gap-4 py-6 px-6">
-                                <img src="image/3.png" class="w-12 ">TV-LG
+                            <td class="flex items-center gap-4 py-6 px-6 whitespace-nowrap">
+                                <img src="{{ asset($order['image']) }}" alt="{{ $order['name'] }}" class="w-12 h-auto">
+                                {{ $order['name'] }}
                             </td>
-                            <td class="px-6 py-4">$650</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-teal-400 text-white py-1 px-5 rounded-lg text-sm">Finish</span>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $order['price'] }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="{{ $order['bg'] }} text-white py-1 px-3 rounded-lg text-sm">
+                                    {{ $order['status'] }}
+                                </span>
                             </td>
                         </tr>
-                    </tbody>
-                    <tbody class="text-gray-700">
-                        <tr class="border-b">
-                            <td class="flex items-center gap-4 py-6 px-6">
-                                <img src="image/3.png" class="w-12 ">TV-LG
-                            </td>
-                            <td class="px-6 py-4">$650</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-green-500 text-white py-1 px-3 rounded-lg text-sm">Confirm</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody class="text-gray-700">
-                        <tr class="border-b">
-                            <td class="flex items-center gap-4 py-6 px-6">
-                                <img src="image/3.png" class="w-12 ">TV-LG
-                            </td>
-                            <td class="px-6 py-4">$650</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-amber-400 text-white py-1 px-3 rounded-lg text-sm">Process</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody class="text-gray-700">
-                        <tr class="border-b">
-                            <td class="flex items-center gap-4 py-6 px-6">
-                                <img src="image/3.png" class="w-12 ">TV-LG
-                            </td>
-                            <td class="px-6 py-4">$650</td>
-                            <td class="px-6 py-4">
-                                <span class="bg-red-500 text-white py-1 px-3 rounded-lg text-sm">Rejected</span>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </section>
-
     </main>
 
-    @include('components.pembeli.footer')
-</body>
-</html>
+</div>
+
+@endsection

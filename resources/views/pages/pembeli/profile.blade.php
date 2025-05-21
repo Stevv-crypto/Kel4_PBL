@@ -20,7 +20,7 @@
                 <!-- Manage Account -->
                 <div>
                     <span class="text-black font-semibold">Manage My Account</span>
-                    <a href="Profile" class="text-blue-500 hover:underline block">My Profile</a>
+                    <a href="{{ route('profile') }}" class="text-blue-500 hover:underline block">My Profile</a>
                 </div>
 
                 <!-- Orders -->

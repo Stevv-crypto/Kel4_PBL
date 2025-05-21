@@ -7,7 +7,7 @@
 
     <!-- Breadcrumb -->
     <div class="max-w-4xl mx-auto px-10 flex flex-row items-center gap-3 mt-10">
-      <a href="/" class="text-black hover:underline opacity-50">Home</a>
+      <a href="{{ route('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
       <div class="h-4 border-l border-gray-500 opacity-70 transform rotate-45"></div>
       <a href="{{ route('about') }}" class="text-black hover:underline">About</a>
     </div>
@@ -36,8 +36,6 @@
         <p class="text-gray-600">{{ $member['role'] }}</p>
         <div class="flex justify-center gap-4 text-xl text-gray-600">
           <a href="{{ $member['instagram'] }}"><i class='bx bxl-instagram'></i></a>
-          <a href="{{ $member['gmail'] }}"><i class='bx bxl-gmail'></i></a>
-          <a href="{{ $member['linkedin'] }}"><i class='bx bxl-linkedin'></i></a>
         </div>
       </div>
       @endforeach
