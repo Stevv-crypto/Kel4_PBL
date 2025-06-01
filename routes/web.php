@@ -20,6 +20,8 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\ProductAdminController;
+use App\Http\Controllers\SiteSettingController;
+
 
 // Namespace Penjual
 
@@ -67,6 +69,7 @@ Route::get('/manage_product2', function() {
     return view('pages/admin/manage_product2');
 });
 
+
 Route::get('/login', [loginController::class, 'tampilLogin'])->name('login');
 Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('register');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -106,10 +109,17 @@ Route::get('manage_product', [SellerController::class, 'index'])->name('manage_p
 Route::post('manage_product', [SellerController::class, 'store'])->name('manage_product.store');
 Route::put('/admin/manage_product/{id}', [SellerController::class, 'update'])->name('manage_product.update');
 Route::delete('/admin/manage_product/{id}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
+
+//setting
+Route::get('/admin/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
+Route::post('/admin/settings', [SiteSettingController::class, 'update'])->name('settings.update');
+
 //team
 Route::prefix('team')->group(function () {
     Route::get('/', [TimController::class, 'index'])->name('team.index');
     Route::get('/create', [TimController::class, 'create'])->name('team.create');
     Route::post('/store', [TimController::class, 'store'])->name('team.store');
+
 });
+
 

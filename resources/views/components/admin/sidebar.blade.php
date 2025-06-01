@@ -65,7 +65,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="setting"
                        class="flex items-center p-3 rounded-lg {{ request()->routeIs('setting') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                         <i class="fas fa-cog mr-3"></i> Settings
                     </a>
