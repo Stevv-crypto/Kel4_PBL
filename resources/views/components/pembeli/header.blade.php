@@ -68,7 +68,7 @@
             </a>
         </div>
         <div class="option px-4 py-3 hover:bg-gray-100">
-            <a href="logout.php" class="flex items-center gap-3 text-red-800 text-sm">
+            <a href="{{ route('logout') }}" class="flex items-center gap-3 text-red-800 text-sm">
                 <i class='bx bx-log-out'></i> <span>Logout</span>
             </a>
         </div>

@@ -71,7 +71,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="{{ route('logout') }}"
                        class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-[#4880FF]">
                         <i class="fas fa-sign-out-alt mr-3"></i> Logout
                     </a>

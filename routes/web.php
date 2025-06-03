@@ -3,25 +3,24 @@
 use Illuminate\Support\Facades\Route;
 
 // Namespace Pembeli
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
-use App\Http\Controllers\productController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+
+// Namespace Penjual
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\productController;
+use App\Http\Controllers\ProductAdminController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\TimController;
-use App\Http\Controllers\ProductAdminController;
-
-// Namespace Penjual
 
 Route::get('/', function () {
     return view('welcome');
@@ -67,8 +66,10 @@ Route::get('/manage_product2', function() {
     return view('pages/admin/manage_product2');
 });
 
-Route::get('/login', [loginController::class, 'tampilLogin'])->name('login');
-Route::get('/register', [RegisterController::class, 'tampilRegister'])->name('register');
+Route::get('/login', [AuthController::class, 'tampilLogin'])->name('tampilLogin');
+Route::post('/login', [AuthController::class, 'dataLogin'])->name('dataLogin');
+Route::get('/register', [AuthController::class, 'tampilRegister'])->name('tampilRegister');
+Route::post('/register', [AuthController::class, 'dataRegister'])->name('dataRegister');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');;
@@ -94,7 +95,6 @@ Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clea
 Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
 
 //Admin route//
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/inbox', [InboxController::class, 'index'])->name('inbox');
 Route::post('/inbox/send-message', [InboxController::class, 'sendMessage'])->name('inbox.send-message');
 
@@ -113,3 +113,11 @@ Route::prefix('team')->group(function () {
     Route::post('/store', [TimController::class, 'store'])->name('team.store');
 });
 
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::group(['middleware' => ['auth', 'check_role:admin']], function() {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware(['auth', 'check_role:admin'])->group(function() {
+});
