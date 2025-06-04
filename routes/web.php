@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\InvoiceController;
 
 // Namespace Penjual
 use App\Http\Controllers\DashboardController;
@@ -21,7 +22,10 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\TimController;
-
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MerkController;
+use App\Http\Controllers\SiteSettingController;
 // Namespace Penjual
 
 Route::get('/', function () {
@@ -81,12 +85,13 @@ Route::get('/productAdmin', [ProductAdminController::class, 'tampilProduk'])->na
 //Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout'); gk dipakai
 Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');;
 Route::get('category', [ProductController::class, 'tampilKategori'])->name('category');
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/category', [ProductController::class, 'tampilKategori'])->name('tampilKategori');
 Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/product', [productController::class, 'tampilProduk'])->name('products');
-Route::get('/viewAll', [viewAllController::class, 'tampilProduk'])->name('viewAll');
+//Route::get('/viewAll', [viewAllController::class, 'tampilProduk'])->name('viewAll');
+Route::get('/products', [ViewAllController::class, 'tampilProduk'])->name('products');
 Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');
 
 // cart and checkout
@@ -107,8 +112,9 @@ Route::get('/sales', [SalesController::class, 'sales'])->name('sales');
 //manageproduct
 Route::get('manage_product', [SellerController::class, 'index'])->name('manage_product.index');
 Route::post('manage_product', [SellerController::class, 'store'])->name('manage_product.store');
-Route::put('/admin/manage_product/{id}', [SellerController::class, 'update'])->name('manage_product.update');
-Route::delete('/admin/manage_product/{id}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
+Route::put('/admin/manage_product/{code_product}', [SellerController::class, 'update'])->name('manage_product.update');
+Route::delete('/manage_product/{code_product}', [ProductController::class, 'destroy'])->name('manage_product.delete');
+
 
 //setting
 Route::get('/admin/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
@@ -121,6 +127,44 @@ Route::prefix('team')->group(function () {
     Route::post('/store', [TimController::class, 'store'])->name('team.store');
 
 });
+
+//stock
+Route::get('/admin/manage_stock', [StockController::class, 'index'])->name('manage_stock');
+Route::get('/admin/manage_stock/{code_product}', [StockController::class, 'show'])->name('manage_stock.show');
+Route::get('/admin/manage_stock', [StockController::class, 'index'])->name('manage_stock');
+Route::get('/admin/manage_stock/{category}', [StockController::class, 'show'])->name('stock_detail');
+//Route::put('/stock/update/{id}', [StockController::class, 'update'])->name('stock.update');
+Route::get('/stock/{category}/{merk}', [StockController::class, 'showByMerk'])->name('product_stock');
+//Route::put('admin/manage_stock/{id}', [StockController::class, 'update'])->name('stock.update');
+Route::put('/stock/update/{id}', [StockController::class, 'updateSingle'])->name('stock.updateSingle');
+Route::delete('/manage_product/{code_product}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
+
+
+
+
+
+//category
+Route::resource('category', CategoryController::class);
+Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{code}/product', [CategoryController::class, 'showProduct'])->name('category.product');
+Route::patch('/category/{code}/status', [CategoryController::class, 'updateStatus'])->name('category.updateStatus');
+Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
+Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
+Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
+
+
+//Invoice
+Route::post('/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
+Route::get('/invoice', [InvoiceController::class, 'showInvoice'])->name('invoice.show');
+
+
+//merk
+Route::get('admin/merk', [MerkController::class, 'index'])->name('merk.index');
+Route::post('admin/merk', [MerkController::class, 'store'])->name('merk.store');
+Route::put('admin/merk/{merk}', [MerkController::class, 'update'])->name('merk.update');
+Route::delete('admin/merk/{merk}', [MerkController::class, 'destroy'])->name('merk.destroy');
+Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus'])->name('merk.updateStatus');
 
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

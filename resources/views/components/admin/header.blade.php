@@ -32,7 +32,7 @@
                     <div class="h-8 w-8 overflow-hidden rounded-full bg-gray-300">
                         <img class="h-full w-full object-cover" src="https://ui-avatars.com/api/?name=Admin" alt="Avatar">
                     </div>
-                    <span class="ml-2 text-sm font-medium text-gray-700 hidden sm:block">{{ auth()->user()->name }}</span>
+                    <span class="ml-2 text-sm font-medium text-gray-700 hidden sm:block">#</span>
                     <svg class="h-5 w-5 text-gray-700 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>

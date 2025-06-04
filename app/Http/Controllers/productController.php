@@ -3,60 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\product;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function tampilHome() {
-        $featuredProducts = [
-            [
-                'id' => 1,
-                'image_path' => 'image/12.png',
-                'name' => 'Fan',
-                'price' => 400000,
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/3.png',
-                'name' => 'TV-Samsung',
-                'price' => 3000000,
-            ],
-            [
-                'id' => 3,
-                'image_path' => 'image/4.png',
-                'name' => 'TV-LG',
-                'price' => 2500000,
-            ],
-            [
-                'id' => 4,
-                'image_path' => 'image/6.png',
-                'name' => 'Dispenser-Sharp',
-                'price' => 1200000,
-            ],
-            [
-                'id' => 5,
-                'image_path' => 'image/8.png',
-                'name' => 'Dispenser-Philips',
-                'price' => 1500000,
-            ],
-        ];
-
-        return view('pages.pembeli.home_page', compact('featuredProducts'));
-    }
-
-    public function showCategory($category)
+    // Tampilkan halaman home dengan produk terbaru di hero dan list produk lainnya
+    public function tampilHome()
     {
-        $products = Product::all()->filter(function ($product) use ($category) {
-            return strtolower($product['category']) === strtolower($category);
-        });
-        
-        return view('pages.pembeli.category', compact('products', 'category'));
+        // Produk terbaru (1 produk) beserta merk-nya
+        $latestProduct = Product::with('merk')->orderBy('created_at', 'desc')->first();
+
+        // Ambil 12 produk terbaru lainnya untuk ditampilkan, juga beserta merk-nya
+        $products = Product::with('merk')->orderBy('created_at', 'desc')->take(12)->get();
+
+        return view('pages.pembeli.home_page', compact('latestProduct', 'products'));
     }
 
-    public function show($id)
-{
-    $product = product::findOrFail($id);
-    return view('pages.pembeli.detail_product', compact('product'));
-}
+    // Tampilkan produk berdasarkan kode kategori yang aktif
+    public function showCategory($categoryCode)
+    {
+        $products = Product::where('category_code', $categoryCode)
+                           ->whereHas('category', function($query) {
+                               $query->where('status', 'ON');
+                           })
+                           ->with(['merk', 'category'])
+                           ->get();
 
+        return view('pages.pembeli.category', compact('products', 'categoryCode'));
+    }
+
+    // Tampilkan detail produk berdasarkan code_product (bukan ID)
+    public function show($code_product)
+    {
+        $product = Product::with(['merk', 'category'])
+                          ->where('code_product', $code_product)
+                          ->firstOrFail();
+
+        return view('pages.pembeli.detail_product', compact('product'));
+    }
 }
