@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('no_hp')->nullable();
-            $table->string('alamat')->nullable();
+            $table->string('phone')->nullable();    // diganti dari no_hp ke phone
+            $table->string('address')->nullable();  // diganti dari alamat ke address
             $table->enum('role', ['admin', 'pembeli']);
             $table->enum('status', ['verify', 'active', 'banned'])->default('active');
             $table->rememberToken();
