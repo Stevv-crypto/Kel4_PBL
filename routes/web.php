@@ -30,7 +30,7 @@ use App\Http\Controllers\PasswordController;
 // Namespace Penjual
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 });
 
 Route::get('profile', function () {
