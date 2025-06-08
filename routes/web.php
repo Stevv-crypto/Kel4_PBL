@@ -26,6 +26,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\SiteSettingController;
+use App\Http\Controllers\PasswordController;
 // Namespace Penjual
 
 Route::get('/', function () {
@@ -87,7 +88,18 @@ Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_p
 Route::get('category', [ProductController::class, 'tampilKategori'])->name('category');
 Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/category', [ProductController::class, 'tampilKategori'])->name('tampilKategori');
-Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+
+//Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/change-password', [PasswordController::class, 'edit'])->name('change.password');
+    Route::post('/change-password', [PasswordController::class, 'update'])->name('change.password.update');
+});
+
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/product', [productController::class, 'tampilProduk'])->name('products');
 //Route::get('/viewAll', [viewAllController::class, 'tampilProduk'])->name('viewAll');
