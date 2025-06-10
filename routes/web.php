@@ -210,3 +210,6 @@ Route::group(['middleware' => ['auth', 'check_role:admin']], function() {
 
 Route::middleware(['auth', 'check_role:admin'])->group(function() {
 });
+
+//search
+Route::get('/search', [productController::class, 'search'])->name('search');

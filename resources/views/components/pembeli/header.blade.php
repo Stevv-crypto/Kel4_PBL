@@ -57,12 +57,11 @@
         </nav>
 
         <!-- Search & Actions -->
-        <div class="actions hidden md:flex items-center gap-8">
-            <div class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
-                <input type="text" id="search" placeholder="What are you looking for?"
-                    class="bg-transparent border-none text-sm placeholder-gray-500 w-48 px-2 py-1 focus:outline-none" />
-                <i class='bx bx-search icon absolute right-2 text-base text-black'></i>
-            </div>
+        <form action="{{ route('search') }}" method="GET" class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
+            <input type="text" name="query" placeholder="What are you looking for?"
+                class="bg-transparent border-none text-sm placeholder-gray-500 w-48 px-2 py-1 focus:outline-none" />
+            <button type="submit"><i class='bx bx-search icon absolute right-2 text-base text-black'></i></button>
+        </form>
 
             <div class="nav-icon flex items-center gap-6 text-xl text-black">
                 <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>
@@ -100,11 +99,12 @@
             </ul>
         </details>
 
-        <div class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
-            <input type="text" id="searchMobile" placeholder="Search..."
-                class="bg-transparent border-none text-sm placeholder-gray-500 w-full px-2 py-1 focus:outline-none" />
-            <i class='bx bx-search icon absolute right-2 text-base text-black'></i>
-        </div>
+        <form action="{{ route('search') }}" method="GET" class="search-box relative flex items-center bg-[#e8dedd] rounded px-3 py-1">
+            <input type="text" name="query" placeholder="What are you looking for?"
+                class="bg-transparent border-none text-sm placeholder-gray-500 w-48 px-2 py-1 focus:outline-none" />
+            <button type="submit"><i class='bx bx-search icon absolute right-2 text-base text-black'></i></button>
+        </form>
+
 
         <div class="flex items-center gap-6 text-xl text-black mt-2">
             <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>

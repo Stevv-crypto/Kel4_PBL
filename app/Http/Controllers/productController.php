@@ -46,4 +46,24 @@ class ProductController extends Controller
 
         return view('pages.pembeli.detail_product', compact('product'));
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $products = Product::with('category', 'merk')
+            ->where('name', 'like', '%' . $query . '%')
+            ->orWhereHas('category', function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%');
+            })
+            ->orWhereHas('merk', function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%');
+            })
+            ->get();
+
+        return view('pages.pembeli.search_results', compact('products', 'query'));
+    }
+
 }
