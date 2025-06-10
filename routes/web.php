@@ -113,6 +113,13 @@ Route::get('/cart', [CartController::class, 'showCart'])->name('cart');
 //Route::delete('/cart/remove/{productId}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
 //Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
 //Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::put('/cart/update/{code_product}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
+Route::delete('/cart/remove/{code_product}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
+Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
+Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::post('/cart/add/{code_product}', [CartController::class, 'add']);
+
+
 
 //Admin route//
 Route::get('/inbox', [InboxController::class, 'index'])->name('inbox');

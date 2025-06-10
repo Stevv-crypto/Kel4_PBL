@@ -1,34 +1,43 @@
-<div class="bg-[#E2D8D8] rounded-lg shadow p-4 text-start relative">
-    <a href="{{ route('product.show', $product->code_product) }}" class="absolute top-2 right-2 text-gray-700 hover:text-blue-600 text-lg">
-        <i class='bx bx-show'></i>
-    </a>
+<a href="{{ route('product.show', $product->code_product) }}" 
+   class="group block bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition duration-300 relative">
     
-    <div class="relative pb-4">
+    <!-- Gambar Produk -->
+    <div class="mb-4">
         @if ($product->image)
-            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="mx-auto mb-4 w-32 h-32 object-contain">
+            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                 class="w-full h-20 object-contain mx-auto transition-transform duration-300 group-hover:scale-105" />
         @else
-            <div class="w-32 h-32 mx-auto mb-4 flex items-center justify-center bg-gray-200 text-gray-500">
+            <div class="w-full h-20 flex items-center justify-center bg-gray-100 text-gray-400 text-sm">
                 No Image
             </div>
         @endif
     </div>
 
-    <button class="w-full bg-[#373D49] text-white py-1.5 text-sm rounded-none mt-3"
-            onclick="addToCart({{ $product->code_product }})">
-        Add to Cart
-    </button>
-
-    <div class="border-t border-gray-300 pt-1">
-        <h4 class="font-semibold text-xs mt-1">{{ $product->name }}</h4>
-        <p class="text-sm">
-            <span class="text-blue-600 font-bold">Rp.{{ number_format($product->price, 2, ',', '.') }}</span>
+    <!-- Info Produk -->
+    <div class="text-center">
+        <h4 class="text-sm font-semibold text-gray-800 truncate">{{ $product->name }}</h4>
+        <p class="text-blue-600 font-bold text-base mt-1">Rp {{ number_format($product->price, 2, ',', '.') }}</p>
+        <!-- Tambahkan stock -->
+        <p class="text-sm text-gray-600 mt-1">
+        Stok: <span class="{{ ($product->stock && $product->stock->stock > 0) ? 'text-green-600' : 'text-red-600' }}">
+            {{ $product->stock->stock ?? 0 }}
+        </span>
         </p>
     </div>
-</div>
+
+    <!-- Tombol Add to Cart -->
+    <div class="mt-4">
+        <button onclick="event.stopPropagation(); event.preventDefault(); addToCart({{ $product->code_product }})"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition duration-200 flex items-center justify-center gap-2">
+            <i class='bx bx-cart text-lg'></i> Add to Cart
+        </button>
+    </div>
+</a>
+
 
 <script>
-    function addToCart(productId) {
-        fetch(`/cart/add/${productId}`, {
+    function addToCart(code_product) {
+        fetch(`/cart/add/${code_product}`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
