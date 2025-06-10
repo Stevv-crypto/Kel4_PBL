@@ -27,7 +27,7 @@
 
     <!-- Tombol Add to Cart -->
     <div class="mt-4">
-        <button onclick="event.stopPropagation(); event.preventDefault(); addToCart({{ $product->code_product }})"
+        <button onclick="event.stopPropagation(); event.preventDefault(); addToCart('{{ $product->code_product }}')"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition duration-200 flex items-center justify-center gap-2">
             <i class='bx bx-cart text-lg'></i> Add to Cart
         </button>

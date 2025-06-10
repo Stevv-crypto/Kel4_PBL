@@ -2,91 +2,133 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Models\Product;
+use App\Models\Cart;
+use App\Models\User;
 
 class CartController extends Controller
 {
-    // Menambahkan produk ke dalam keranjang
-    public function addToCart(Request $request, $productId)
+    public function __construct()
     {
-        $product = Product::findOrFail($productId);
+        // Semua method butuh user login
+        $this->middleware('auth');
+    }
 
-        $cart = session()->get('cart', []);
-        $quantity = $request->input('quantity', 1);
-
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
-        } else {
-            $cart[$productId] = [
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'quantity' => $quantity,
-                'image' => $product['image_path'],
-            ];
+    // Tambah produk ke keranjang
+    public function addToCart(Request $request, $code_product)
+    {
+        //dd(Auth::check(), Auth::user());
+        $product = Product::where('code_product', $code_product)->first();
+        dd(Auth::check(), Auth::user());
+        if (!$product) {
+            return $request->wantsJson()
+                ? response()->json(['message' => 'Produk tidak ditemukan.'], 404)
+                : redirect()->back()->with('error', 'Produk tidak ditemukan.');
         }
 
-        session()->put('cart', $cart);
+        $quantity = (int) $request->input('quantity', 1);
+        $subtotal = $product->price * $quantity;
+        $userEmail = Auth::user()->email;
 
-        // Jika request dari fetch/ajax, balas dengan JSON
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Produk berhasil ditambahkan ke keranjang!',
-                'cart_count' => count($cart)
+        $existing = Cart::where('code_product', $code_product)
+            ->where('user_email', $userEmail)
+            ->first();
+
+        if ($existing) {
+            $existing->quantity += $quantity;
+            $existing->subtotal = $existing->quantity * $product->price;
+            $existing->save();
+        } else {
+            Cart::create([
+                'code_cart' => Str::uuid(),
+                'user_email' => $userEmail,
+                'code_product' => $code_product,
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
             ]);
         }
 
-        // Jika bukan AJAX, redirect seperti biasa
-        return redirect()->route('cart');
+        return $request->wantsJson()
+            ? response()->json(['message' => 'Produk berhasil ditambahkan ke keranjang.'])
+            : redirect()->route('cart')->with('success', 'Produk ditambahkan ke keranjang.');
     }
 
-    // Menampilkan keranjang belanja
+    // Tampilkan isi keranjang
     public function showCart()
     {
-        $cart = session()->get('cart', []);
-        return view('pages.pembeli.cart', compact('cart'));
+        $userEmail = Auth::user()->email;
+
+        $cartItems = Cart::with('product')
+            ->where('user_email', $userEmail)
+            ->get();
+
+        return view('pages.pembeli.cart', ['cart' => $cartItems]);
     }
 
-    // Mengupdate jumlah produk di keranjang
-    public function updateCart(Request $request, $productId)
+    // Update jumlah produk di keranjang
+    public function updateCart(Request $request, $code_product)
     {
-        $cart = session()->get('cart', []);
+        $userEmail = Auth::user()->email;
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $request->input('quantity', 1);
+        $cart = Cart::where('code_product', $code_product)
+            ->where('user_email', $userEmail)
+            ->first();
+
+        if ($cart) {
+            $quantity = (int) $request->input('quantity', 1);
+            $cart->quantity = $quantity;
+            $cart->subtotal = $quantity * $cart->product->price;
+            $cart->save();
         }
 
-        session()->put('cart', $cart);
-        return redirect()->route('cart');
+        return redirect()->route('cart')->with('success', 'Keranjang diperbarui.');
     }
 
-    // Menghapus produk dari keranjang
-    public function removeFromCart($productId)
+    // Hapus produk dari keranjang
+    public function removeFromCart($code_product)
     {
-        $cart = session()->get('cart', []);
+        $userEmail = Auth::user()->email;
 
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
+        $cart = Cart::where('code_product', $code_product)
+            ->where('user_email', $userEmail)
+            ->first();
+
+        if ($cart) {
+            $cart->delete();
         }
 
-        session()->put('cart', $cart);
-        return redirect()->route('cart');
+        return redirect()->route('cart')->with('success', 'Produk dihapus dari keranjang.');
     }
 
-    // Menghapus semua produk dari keranjang
-    public function clearCart()
+    // Proses checkout dengan item terpilih
+    public function goToCheckout(Request $request)
     {
-        session()->forget('cart');
-        return redirect()->route('cart');
-    }
-    
-    public function checkout()
-    {
-        $cart = session()->get('cart', []);
-        $total = array_reduce($cart, function ($carry, $item) {
-            return $carry + ($item['price'] * $item['quantity']);
-        }, 0);
+        $request->validate([
+            'selected_items' => 'required|array',
+        ]);
 
-        return view('pages.pembeli.checkout', compact('cart', 'total'));
+        $userEmail = Auth::user()->email;
+        $selectedItems = $request->input('selected_items');
+
+        $cartItems = Cart::with('product')
+            ->where('user_email', $userEmail)
+            ->whereIn('code_cart', $selectedItems)
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return back()->with('error', 'Tidak ada item yang dipilih.');
+        }
+
+        $total = $cartItems->sum('subtotal');
+        $user = Auth::user();
+
+        return view('pages.pembeli.checkout', [
+            'cartItems' => $cartItems,
+            'total' => $total,
+            'user' => $user,
+        ]);
     }
 }

@@ -47,7 +47,7 @@
       </p>
 
       <!-- Add to Cart Section -->
-      <form action="#" method="POST" class="flex items-center gap-4">
+      <form action="{{ route('cart.add', ['code_product' => $product->code_product]) }}" method="POST" class="flex items-center gap-4">
         @csrf
         
         <div class="flex items-center border border-gray-400 rounded overflow-hidden">
