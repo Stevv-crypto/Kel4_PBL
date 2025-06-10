@@ -20,28 +20,37 @@ class CartController extends Controller
     // Tambah produk ke keranjang
     public function addToCart(Request $request, $code_product)
     {
-        //dd(Auth::check(), Auth::user());
+        // Cari produk berdasarkan code_product
         $product = Product::where('code_product', $code_product)->first();
-        dd(Auth::check(), Auth::user());
+
         if (!$product) {
+            // Jika produk tidak ditemukan, cek permintaan JSON atau bukan
             return $request->wantsJson()
                 ? response()->json(['message' => 'Produk tidak ditemukan.'], 404)
                 : redirect()->back()->with('error', 'Produk tidak ditemukan.');
         }
 
+        // Ambil quantity dari input, default 1
         $quantity = (int) $request->input('quantity', 1);
+        if ($quantity < 1) {
+            $quantity = 1; // Pastikan quantity minimal 1
+        }
+
         $subtotal = $product->price * $quantity;
         $userEmail = Auth::user()->email;
 
+        // Cari data cart yang sudah ada untuk produk dan user tersebut
         $existing = Cart::where('code_product', $code_product)
             ->where('user_email', $userEmail)
             ->first();
 
         if ($existing) {
+            // Jika sudah ada, tambah quantity dan update subtotal
             $existing->quantity += $quantity;
             $existing->subtotal = $existing->quantity * $product->price;
             $existing->save();
         } else {
+            // Kalau belum ada, buat data cart baru
             Cart::create([
                 'code_cart' => Str::uuid(),
                 'user_email' => $userEmail,
@@ -51,10 +60,22 @@ class CartController extends Controller
             ]);
         }
 
-        return $request->wantsJson()
-            ? response()->json(['message' => 'Produk berhasil ditambahkan ke keranjang.'])
-            : redirect()->route('cart')->with('success', 'Produk ditambahkan ke keranjang.');
+        // Hitung total item unik dalam keranjang user ini (berdasarkan produk unik)
+        $cartCount = Cart::where('user_email', $userEmail)->count();
+
+        // Kalau request AJAX (JSON), kirim pesan dan jumlah cart saat ini
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Produk berhasil ditambahkan ke keranjang.',
+                'cartCount' => $cartCount,
+            ]);
+        }
+
+        // Jika request biasa (bukan AJAX), redirect ke halaman cart dengan pesan sukses
+        return redirect()->route('cart')->with('success', 'Produk ditambahkan ke keranjang.');
     }
+
+
 
     // Tampilkan isi keranjang
     public function showCart()
