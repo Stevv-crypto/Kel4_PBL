@@ -12,6 +12,8 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\PasswordResetLinkController;
 
 // Namespace Penjual
 use App\Http\Controllers\DashboardController;
@@ -73,11 +75,31 @@ Route::get('/manage_product2', function() {
     return view('pages/admin/manage_product2');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
+    // route lain untuk pembeli yang butuh login
+});
+
+
+Route::get('/register', [AuthController::class, 'tampilRegister'])->name('tampilRegister');
+Route::post('/register', [AuthController::class, 'dataRegister'])->name('dataRegister');
 
 Route::get('/login', [AuthController::class, 'tampilLogin'])->name('tampilLogin');
 Route::post('/login', [AuthController::class, 'dataLogin'])->name('dataLogin');
-Route::get('/register', [AuthController::class, 'tampilRegister'])->name('tampilRegister');
-Route::post('/register', [AuthController::class, 'dataRegister'])->name('dataRegister');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');;
@@ -88,12 +110,6 @@ Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_p
 Route::get('category', [ProductController::class, 'tampilKategori'])->name('category');
 Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/category', [ProductController::class, 'tampilKategori'])->name('tampilKategori');
-
-//Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/change-password', [PasswordController::class, 'edit'])->name('change.password');
@@ -122,6 +138,10 @@ Route::post('/cart/add/{code_product}', [CartController::class, 'add']);
 
 
 //Admin route//
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
 Route::get('/inbox', [InboxController::class, 'index'])->name('inbox');
 Route::post('/inbox/send-message', [InboxController::class, 'sendMessage'])->name('inbox.send-message');
 
