@@ -10,10 +10,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'user_id';  // pakai user_id sebagai pk
-    public $incrementing = true;
-    protected $keyType = 'int';
-
     protected $fillable = [
         'name',
         'email',
