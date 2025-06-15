@@ -14,6 +14,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
+use App\Http\Controllers\VerificationController;
+use App\Livewire\Chat\Index;
 
 // Namespace Penjual
 use App\Http\Controllers\DashboardController;
@@ -80,9 +82,16 @@ Route::post('/register', [AuthController::class, 'dataRegister'])->name('dataReg
 Route::get('/login', [AuthController::class, 'tampilLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'dataLogin'])->name('dataLogin');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['auth', 'check_role:pembeli']], function() {
+    Route::get('/verify', [VerificationController::class, 'index'])->name('verify');
+    Route::post('/verify', [VerificationController::class, 'store'])->name('send_otp');
+    Route::get('/verify/{unique_id}', [VerificationController::class, 'show']);
+    Route::put('/verify/{unique_id}', [VerificationController::class, 'update']);
+});
+
+Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
     // Home Page
     Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
 
