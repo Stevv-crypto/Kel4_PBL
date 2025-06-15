@@ -28,7 +28,7 @@
             <ul class="space-y-1">
                 <li><a href="{{ route('profile') }}" class="hover:underline">My Account</a></li>
                 <li><a href="{{ route('cart') }}" class="hover:underline">Cart</a></li>
-                <li><a href="" class="hover:underline">Shop</a></li>
+                <li><a href="{{ route('products') }}" class="hover:underline">Shop</a></li>
             </ul>
         </div>
     </div>

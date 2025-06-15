@@ -3,42 +3,76 @@
 @section('content')
 
 <body class="font-sans bg-white">
-  <div class="home-page relative">
+  <div class="about-page relative">
 
     <!-- Breadcrumb -->
     <div class="max-w-4xl mx-auto px-10 flex flex-row items-center gap-3 mt-10">
       <a href="{{ route('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
       <div class="h-4 border-l border-gray-500 opacity-70 transform rotate-45"></div>
-      <a href="{{ route('about') }}" class="text-black hover:underline">About</a>
+      <span class="text-black font-semibold">Tentang Perusahaan</span>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex flex-col md:flex-row items-center justify-between px-10 py-6 max-w-4xl mx-auto">
-      <!-- Teks di kiri -->
-      <div class="text-left max-w-md mb-6 md:mb-0">
-        <h2 class="text-2xl font-semibold mb-2">Welcome to E-TechnoCart</h2>
-        <p class="text-gray-600">
-          {{ $welcomeText }}
+    <!-- Company Introduction -->
+    <div class="flex flex-col md:flex-row items-center justify-between px-10 py-10 max-w-6xl mx-auto">
+      <!-- Deskripsi perusahaan -->
+      <div class="text-justify max-w-2xl mb-6 md:mb-0">
+        <h1 class="text-3xl font-bold mb-4 text-gray-800">Tentang E-TechnoCart</h1>
+        <p class="text-gray-600 leading-relaxed mb-4">
+          E-TechnoCart adalah perusahaan teknologi yang bergerak di bidang penjualan dan distribusi produk elektronik modern. Kami menyediakan beragam produk mulai dari televisi, laptop, smartphone, perangkat rumah pintar, hingga aksesoris elektronik berkualitas tinggi.
+        </p>
+        <p class="text-gray-600 leading-relaxed mb-4">
+          Dengan fokus pada kemudahan dan kepercayaan pelanggan, E-TechnoCart hadir untuk memberikan pengalaman belanja elektronik secara online yang aman, cepat, dan terpercaya.
+        </p>
+        <p class="text-gray-600 leading-relaxed">
+          Kami berkomitmen untuk terus berinovasi dan menjadi mitra teknologi terbaik bagi seluruh masyarakat Indonesia.
         </p>
       </div>
-      <!-- Gambar di kanan -->
-      <div class="ml-0 md:ml-6 max-w-sm w-full">
-        <img src="{{ asset($welcomeImage) }}" alt="Tech Image" class="rounded-lg shadow-md w-full object-cover" />
+      <!-- Gambar -->
+      <div class="ml-0 md:ml-6 max-w-md w-full">
+        <img src="{{ asset('images/company-electronics.jpg') }}" alt="Perusahaan Elektronik" class="rounded-lg shadow-md w-full object-cover" />
       </div>
     </div>
 
-    <!-- Grid Team Members -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto px-8 py-4">
-      @foreach ($teamMembers as $member)
-      <div class="text-center">
-        <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" class="w-full h-48 object-cover rounded shadow-md mb-2" />
-        <h1 class="text-lg font-semibold mb-1">{{ $member['name'] }}</h1>
-        <p class="text-gray-600">{{ $member['role'] }}</p>
-        <div class="flex justify-center gap-4 text-xl text-gray-600">
-          <a href="{{ $member['instagram'] }}"><i class='bx bxl-instagram'></i></a>
+    <!-- Misi & Visi -->
+    <div class="bg-gray-100 py-10 mt-6">
+      <div class="max-w-6xl mx-auto px-8 text-justify">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Visi Kami</h2>
+            <p class="text-gray-600 leading-relaxed">
+              Menjadi platform e-commerce elektronik terdepan di Indonesia yang inovatif, terpercaya, dan berfokus pada kepuasan pelanggan.
+            </p>
+          </div>
+          <div>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Misi Kami</h2>
+            <ul class="list-disc list-inside text-gray-600 space-y-2 text-justify">
+              <li>Menyediakan produk elektronik berkualitas dan bergaransi resmi.</li>
+              <li>Menghadirkan pengalaman belanja online yang mudah dan aman.</li>
+              <li>Memberikan layanan pelanggan yang responsif dan solutif.</li>
+              <li>Terus berinovasi mengikuti perkembangan teknologi.</li>
+            </ul>
+          </div>
         </div>
       </div>
-      @endforeach
+    </div>
+
+    <!-- Nilai Perusahaan -->
+    <div class="py-10 px-8 max-w-6xl mx-auto text-justify">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Nilai-Nilai Kami</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        <div class="bg-white rounded-xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-2 text-gray-800">Kepercayaan</h3>
+          <p class="text-gray-600">Kami menjunjung tinggi integritas dan transparansi dalam setiap transaksi.</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-2 text-gray-800">Inovasi</h3>
+          <p class="text-gray-600">Kami terus mengembangkan layanan dan produk sesuai perkembangan teknologi terbaru.</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-2 text-gray-800">Kepuasan Pelanggan</h3>
+          <p class="text-gray-600">Kami berkomitmen memberikan layanan yang terbaik dan responsif.</p>
+        </div>
+      </div>
     </div>
 
   </div>
