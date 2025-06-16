@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
@@ -129,8 +130,10 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::put('/cart/update/{code_product}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
     Route::delete('/cart/remove/{code_product}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
     Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
-    Route::post('/cart/checkout-preview', [CartController::class, 'goToCheckout'])->name('checkout.preview');
+    Route::post('/cart/checkout-preview', [CheckoutController::class, 'showCheckoutPage'])->name('checkout.preview');
+    Route::post('/checkout/submit', [CheckoutController::class, 'checkout'])->name('checkout.submit');
 
+    
     //search
     Route::get('/search', [productController::class, 'search'])->name('search');
 });
