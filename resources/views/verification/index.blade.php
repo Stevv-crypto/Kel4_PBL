@@ -4,23 +4,6 @@
 
 @section('content')
 
-<style>
-input::-ms-reveal,
-input::-ms-clear,
-input::-webkit-credentials-auto-fill-button,
-input::-webkit-clear-button {
-    display: none !important;
-}
-
-input[type="password"]::-ms-reveal {
-    display: none;
-}
-
-input[type="password"]::-webkit-textfield-decoration-container {
-    display: none;
-}
-</style>
-
 <section class="flex max-md:flex-col max-lg:flex-row items-center justify-center min-h-screen">
     <!-- Gambar Produk -->
     <div class="w-3/5 lg:flex justify-center mb-10 md:hidden">
@@ -34,7 +17,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
             <div class="text-red-700 mt-10 text-center">{{ session('failed') }}</div>
         @endif
 
-        <form action="{{ route('verify') }}" method="post" class="grid justify-items-center mt-4">
+        <form action="/verify" method="post" class="grid justify-items-center mt-4">
             @csrf
             <input type="hidden" value="register" name="type">
             <button type="submit" class="bg-[#70B9EA] text-white py-3 px-5 w-48 rounded-md text-center text-sm hover:bg-blue-600 transition-colors">Send OTP to your email</button>

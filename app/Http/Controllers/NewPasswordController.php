@@ -2,41 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 
 class NewPasswordController extends Controller
 {
-    public function create(Request $request, $token)
+    public function create()
     {
-        return view('auth.reset-password', [
-            'token' => $token,
-            'email' => $request->email
-        ]);
-    }
+        $userId = session('reset_user_id');
+        if (!$userId) {
+            return redirect()->route('login')->with('failed', 'Akses tidak valid.');
+        }
+
+        $user = User::findOrFail($userId);
+        return view('auth.reset-password', ['email' => $user->email]);
+        }
 
     public function store(Request $request)
     {
         $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
+            'password' => 'required|max:50|min:8',
+            'password_confirmation' => 'required|max:50|min:8|same:password',
         ]);
 
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password)
-                ])->save();
-            }
-        );
+        $user_id = session('reset_user_id');
+        if (!$user_id) {
+            return redirect()->route('password.reset')->withErrors(['expired' => 'Sesi reset tidak ditemukan atau sudah kadaluarsa.']);
+        }
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect('/login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        $user = User::findOrFail($user_id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        session()->forget('reset_user_id');
+
+        return redirect()->route('login')->with('success', 'Password berhasil diperbarui.');
+    }
+
+    public function reset(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+        }
+
+        $token = Password::createToken($user);
+        session(['reset_user_id' => $user->id]);
+
+        return redirect()->route('password.reset')->with('success', 'Link reset password telah dikirim ke email Anda.');
     }
 }

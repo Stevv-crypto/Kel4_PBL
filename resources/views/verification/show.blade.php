@@ -4,23 +4,6 @@
 
 @section('content')
 
-<style>
-input::-ms-reveal,
-input::-ms-clear,
-input::-webkit-credentials-auto-fill-button,
-input::-webkit-clear-button {
-    display: none !important;
-}
-
-input[type="password"]::-ms-reveal {
-    display: none;
-}
-
-input[type="password"]::-webkit-textfield-decoration-container {
-    display: none;
-}
-</style>
-
 <section class="flex max-md:flex-col max-lg:flex-row items-center justify-center min-h-screen">
     <!-- Gambar Produk -->
     <div class="w-3/5 lg:flex justify-center mb-10 md:hidden">
@@ -34,7 +17,10 @@ input[type="password"]::-webkit-textfield-decoration-container {
         @if (session('failed'))
             <div class="text-red-700 mt-10 text-center">{{ session('failed') }}</div>
         @endif
-        <form action="/verify/{{$unique_id}}" method="post" class="space-y-8 mt-12">
+        @if (session('success'))
+            <div class="text-green-700 mt-10 text-center">{{ session('success') }}</div>
+        @endif
+        <form action="{{ $context === 'reset_password' ? route('reset.update', $unique_id) : route('verify.update', $unique_id) }}" method="post" class="space-y-8 mt-12">
             @method('PUT')
             @csrf
             <div class="relative">
@@ -45,7 +31,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
             <small class="text-red-700">{{ $message }}</small>
             @enderror
             <div class="flex justify-between space-x-4 items-center w-full">
-                <a href="{{ route('send_otp') }}">Resend OTP</a>
+                <!-- <a href="{{ $context === 'reset-password' ? route('reset.send_otp', $unique_id) : route('verify.send_otp', $unique_id) }}">Resend OTP</a> -->
                 <button class="bg-[#70B9EA] text-white py-3 px-5 w-32 rounded-md text-center text-sm hover:bg-blue-600 transition-colors">Submit</button>
             </div>
             <div class="relative">

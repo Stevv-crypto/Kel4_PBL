@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use App\Models\User;
+use Illuminate\Support\Facades\Session;
+
 
 class AuthController extends Controller
 {
@@ -62,6 +64,7 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request) {
         Auth::logout();
+        Session::flush();
         return redirect()->route('login')->with('success', 'Anda telah logout');
     }
 }
