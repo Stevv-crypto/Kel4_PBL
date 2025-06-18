@@ -62,11 +62,21 @@
                 class="bg-transparent border-none text-sm placeholder-gray-500 w-48 px-2 py-1 focus:outline-none" />
             <button type="submit"><i class='bx bx-search icon absolute right-2 text-base text-black'></i></button>
         </form>
-
-            <div class="nav-icon flex items-center gap-6 text-xl text-black">
-                <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>
-                <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
-            </div>
+        <!-- ini yang baru untuk notifikasi produk masuk ke keranjang  -->
+        <div class="nav-icon flex items-center gap-6 text-xl text-black">
+            <a href="{{ route('cart') }}" class="relative">
+                <i class='bx bx-cart-alt'></i>
+                @if($cartCount > 0)
+                    <span id="cart-count" class="absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">
+                        {{ $cartCount }}
+                    </span>
+                @else
+                    <span id="cart-count" class="absolute -top-2 -right-2 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hidden">
+                        0
+                    </span>
+                @endif
+            </a>
+            <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
         </div>
     </div>
 
@@ -105,9 +115,10 @@
             <button type="submit"><i class='bx bx-search icon absolute right-2 text-base text-black'></i></button>
         </form>
 
-
+        
         <div class="flex items-center gap-6 text-xl text-black mt-2">
-            <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i></a>
+            <a href="{{ route('cart') }}"><i class='bx bx-cart-alt'></i>
+            <span class="absolute top-0 right-0 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">2</span></a>
             <a href="javascript:void(0);" onclick="toggleDropdown()"><i class='bx bx-user'></i></a>
         </div>
     </div>

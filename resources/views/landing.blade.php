@@ -70,7 +70,7 @@
             <nav class="flex justify-between items-center px-10 py-6 text-white">
                 <div class="text-3xl font-bold tracking-wide animate-slide-in-left">E-Technocart</div>
                 <div class="space-x-8 text-lg font-medium">
-                    <a href="{{ route('tampilLogin') }}" class="hover:text-blue-400 animate-slide-in-left">Login</a>
+                    <a href="{{ route('login') }}" class="hover:text-blue-400 animate-slide-in-left">Login</a>
                     <a href="{{ route('dataRegister') }}"
                         class="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg animate-slide-in-left transition">Register</a>
                 </div>

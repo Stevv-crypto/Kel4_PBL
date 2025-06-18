@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
@@ -206,23 +207,29 @@ Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus']
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::prefix('reset')->group(function() {
+    Route::post('/verify', [VerificationController::class, 'store'])->name('reset.send_otp');
+    Route::get('/verify/{unique_id}', [VerificationController::class, 'show'])->name('reset.show_otp');
+    Route::put('/verify/{unique_id}', [VerificationController::class, 'update'])->name('reset.update');
+});
+
 Route::group(['middleware' => ['auth', 'check_role:pembeli']], function() {
     Route::get('/verify', [VerificationController::class, 'index'])->name('verify');
-    Route::post('/verify', [VerificationController::class, 'store'])->name('send_otp');
-    Route::get('/verify/{unique_id}', [VerificationController::class, 'show']);
-    Route::put('/verify/{unique_id}', [VerificationController::class, 'update']);
+    Route::post('/verify', [VerificationController::class, 'store'])->name('verify.send_otp');
+    Route::get('/verify/{unique_id}', [VerificationController::class, 'show'])->name('verify.show_otp');
+    Route::put('/verify/{unique_id}', [VerificationController::class, 'update'])->name('verify.update');
 });
+
+// Forgot Password
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+
+// Reset Password
+Route::get('/reset-password', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
 Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
     // Home Page
     Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
-
-    // Forgot Password
-    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-
-    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
@@ -251,8 +258,9 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::put('/cart/update/{code_product}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
     Route::delete('/cart/remove/{code_product}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
     Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
-    Route::post('/cart/checkout-preview', [CartController::class, 'goToCheckout'])->name('checkout.preview');
-
+    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+        
     //search
     Route::get('/search', [productController::class, 'search'])->name('search');
 });
@@ -291,7 +299,7 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::delete('admin/merk/{merk}', [MerkController::class, 'destroy'])->name('merk.destroy');
     Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus'])->name('merk.updateStatus');
     });
-    
+
     //stock
     Route::get('/admin/manage_stock', [StockController::class, 'index'])->name('manage_stock');
     Route::get('/admin/manage_stock/{code_product}', [StockController::class, 'show'])->name('manage_stock.show');
@@ -310,13 +318,17 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
-    
+
     //Invoice
     Route::post('/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
     Route::get('/invoice', [InvoiceController::class, 'showInvoice'])->name('invoice.show');
+<<<<<<< HEAD
     
 });
 
 //search
 Route::get('/search', [productController::class, 'search'])->name('search');
 
+=======
+});
+>>>>>>> cc413cb8605208df32e700451f1a283e818e3fba

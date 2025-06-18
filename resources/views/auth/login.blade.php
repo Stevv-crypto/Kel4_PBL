@@ -34,6 +34,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
         @if (session('failed'))
             <div class="text-red-700 mt-10 text-center">{{ session('failed') }}</div>
         @endif
+        @if (session('success'))
+            <div class="text-green-700 mt-10 text-center">{{ session('success') }}</div>
+        @endif
         <form action="{{ route('dataLogin') }}" method="post" class="space-y-8 mt-12">
             @csrf
             <div class="relative">
@@ -58,7 +61,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
             </div>
             <div class="flex justify-between space-x-4 items-center w-full">
                 <button class="bg-[#70B9EA] text-white py-3 px-5 w-32 rounded-md text-center text-sm hover:bg-blue-600 transition-colors">Login</button>
-                <a href="/forget_password1" class="text-black hover:underline">Forget Password?</a>
+                <a href="{{ route('password.request') }}" class="text-black hover:underline">Forget Password?</a>
             </div>
         </form>
         <p class="mt-4 text-sm text-gray-700"> Don't have an account?

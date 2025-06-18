@@ -47,21 +47,26 @@
       </p>
 
       <!-- Add to Cart Section -->
+      @php
+        $availableStock = optional($product->stock)->stock ?? 0;
+      @endphp
+
+      @if ($availableStock > 0)
       <form action="{{ route('cart.add', ['code_product' => $product->code_product]) }}" method="POST" class="flex items-center gap-4">
         @csrf
-        
         <div class="flex items-center border border-gray-400 rounded overflow-hidden">
           <button type="button" class="sub px-4 py-2 text-xl cursor-pointer hover:bg-gray-100">−</button>
           <div class="value w-12 text-center border-l border-r border-gray-400 py-2">1</div>
           <button type="button" class="add px-4 py-2 text-xl cursor-pointer bg-blue-500 hover:bg-blue-600 text-white">+</button>
         </div>    
         <input type="hidden" name="quantity" id="quantity-input" value="1">
-        
         <button type="submit" class="w-full sm:w-40 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 text-center">
           Add To Cart
         </button>
-    </form>
-
+      </form>
+      @else
+        <div class="text-red-600 font-semibold mt-4">Stok habis. Produk tidak tersedia.</div>
+      @endif
 
       <!-- Delivery & Guarantee -->
       <div class="bg-[#b0cee3] p-4 rounded-lg mb-2 mt-4">
@@ -78,6 +83,9 @@
   </div>
 </main>
 
+@if ($availableStock > 0)
+<div id="product-data" data-max-stock="{{ $availableStock }}"></div>
+
 <script>
   const sub = document.querySelector(".sub");
   const add = document.querySelector(".add");
@@ -85,21 +93,35 @@
   const quantityInput = document.querySelector("#quantity-input");
 
   let totalQuantity = 1;
-  value.innerHTML = totalQuantity;
+  const maxStock = parseInt(document.getElementById("product-data").dataset.maxStock);
 
   sub.onclick = () => {
     if (totalQuantity > 1) {
       totalQuantity--;
       value.innerHTML = totalQuantity;
       quantityInput.value = totalQuantity;
+      add.disabled = false;
+      add.classList.remove('opacity-50', 'cursor-not-allowed');
     }
   };
 
   add.onclick = () => {
-    totalQuantity++;
-    value.innerHTML = totalQuantity;
-    quantityInput.value = totalQuantity;
+    if (totalQuantity < maxStock) {
+      totalQuantity++;
+      value.innerHTML = totalQuantity;
+      quantityInput.value = totalQuantity;
+    }
+    if (totalQuantity >= maxStock) {
+      add.disabled = true;
+      add.classList.add('opacity-50', 'cursor-not-allowed');
+      alert("Jumlah melebihi stok tersedia (" + maxStock + ")");
+    }
   };
 </script>
+<<<<<<< HEAD
 
 @endsection
+=======
+@endif
+@endsection
+>>>>>>> cc413cb8605208df32e700451f1a283e818e3fba
