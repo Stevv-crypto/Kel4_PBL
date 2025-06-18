@@ -71,7 +71,7 @@
         <span id="total-price">Rp 0,00</span>
     </div>
 
-    <form id="cart-form" action="{{ route('checkout.preview') }}" method="POST">
+    <form id="cart-form" action="{{ route('checkout.show') }}" method="GET">
         @csrf
         <div id="hidden-inputs"></div>
         <button type="submit" class="block w-full bg-sky-400 hover:bg-sky-500 text-white font-medium py-2 rounded text-center mt-4">

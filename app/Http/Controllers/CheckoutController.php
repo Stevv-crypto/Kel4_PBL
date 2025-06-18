@@ -2,138 +2,113 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use App\Models\Product;
+use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
-    // Tampilkan halaman checkout
-    public function showCheckoutPage(Request $request)
+    public function showCheckout(Request $request)
     {
         $user = Auth::user();
-        $userEmail = $user->email;
 
-        $selectedIds = $request->input('selected_items', []);
-        if (empty($selectedIds)) {
+        // Redirect jika data user belum lengkap
+        if (!$user->address || !$user->phone) {
+            return redirect()->route('profile')->with('error', 'Lengkapi profil Anda sebelum checkout.');
+        }
+
+        $userEmail = $user->email;
+        $selectedItems = $request->input('selected_items', []); // array dari checkbox
+
+        if (empty($selectedItems)) {
             return redirect()->route('cart')->with('error', 'Pilih item terlebih dahulu.');
         }
 
-        $cartItems = Cart::with('product')
+        $cart = Cart::with('product')
             ->where('user_email', $userEmail)
-            ->whereIn('code_cart', $selectedIds)
+            ->whereIn('code_cart', $selectedItems)
             ->get();
 
-        if ($cartItems->isEmpty()) {
+        if ($cart->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Item tidak ditemukan.');
         }
 
-        // Ambil data metode pembayaran dari database
-        $payments = Payment::all();
-
-        if (empty($user->address) || empty($user->phone)) {
-            return view('pages.pembeli.checkout', [
-                'cartItems' => collect(),
-                'total' => 0,
-                'user' => $user,
-                'payments' => $payments,
-                'showProfileAlert' => true,
-            ]);
-        }
-
-        $total = $cartItems->sum('subtotal');
+        $total = $cart->sum('subtotal');
+        $paymentMethods = Payment::all();
 
         return view('pages.pembeli.checkout', [
-            'cartItems' => $cartItems,
-            'total' => $total,
             'user' => $user,
-            'payments' => $payments,
+            'cart' => $cart,
+            'total' => $total,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 
-    // Proses submit checkout
-    public function checkout(Request $request)
+    public function processCheckout(Request $request)
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        $userEmail = $user->email;
-
         $request->validate([
-            'selected_items' => 'required|array',
-            'payment_method' => 'required|in:Bank BNI,Bank Mandiri,OVO,DANA',
-            'payment_proof'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'payment_method' => 'required|integer|exists:payments,id',
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'selected_items' => 'required|array|min:1', // pastikan item dipilih
+            'selected_items.*' => 'exists:carts,code_cart',
         ]);
 
-        $selectedIds = $request->input('selected_items');
+        $payment = Payment::findOrFail($request->payment_method);
 
+        $user = Auth::user();
+        $selectedItems = $request->input('selected_items', []);
+
+        // Ambil item dari keranjang berdasarkan pilihan user
         $cartItems = Cart::with('product')
-            ->where('user_email', $userEmail)
-            ->whereIn('code_cart', $selectedIds)
+            ->where('user_email', $user->email)
+            ->whereIn('code_cart', $selectedItems)
             ->get();
 
         if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Keranjang kosong atau item tidak ditemukan.');
+            return redirect()->route('cart')->with('error', 'Item yang dipilih tidak valid.');
         }
 
-        // Mapping metode yang dikirim dari form ke method_name yang ada di database
-        $methodMap = [
-            'bni' => 'Bank BNI',
-            'mandiri' => 'Bank Mandiri',
-            'dana' => 'DANA',
-            'ovo' => 'OVO',
-        ];
+        $total = $cartItems->sum('subtotal');
+        $orderCode = 'ORD-' . strtoupper(Str::random(10));
 
-        $methodName = $methodMap[$request->payment_method] ?? null;
+        // Simpan file bukti pembayaran
+        $file = $request->file('payment_proof');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('public/payment_proofs', $fileName);
 
-        $payment = Payment::where('method_name', $methodName)->first();
-        if (!$payment) {
-            return back()->with('error', 'Metode pembayaran tidak ditemukan.');
-        }
-
-        // Upload bukti pembayaran jika tersedia
-        $proofPath = null;
-        if ($request->hasFile('payment_proof')) {
-            $proofPath = $request->file('payment_proof')->store('public/payment_proofs');
-        }
-
-        // Generate kode pesanan unik
-        $orderCode = strtoupper('ORD-' . Str::random(8));
-
-        // Simpan data pesanan
+        // Simpan order ke tabel `orders`
         $order = Order::create([
-            'order_code'     => $orderCode,
-            'user_id'        => $user->id, // ✅ FIXED
-            'total_price'    => $cartItems->sum('subtotal'),
-            'payment_id'     => $payment->id,
-            'payment_proof'  => $proofPath,
-            'status'         => 'WAITING',
+            'order_code' => $orderCode,
+            'user_id' => $user->id,
+            'payment_id' => $request->payment_method,
+            'total_price' => $total,
+            'status' => 'waiting',
+            'payment_proof' => 'payment_proofs/' . $fileName,
         ]);
 
-        // Simpan item pesanan
+        // Simpan item pesanan ke tabel `order_items`
         foreach ($cartItems as $item) {
             OrderItem::create([
-                'order_code'   => $order->order_code,
+                'order_code' => $orderCode,
                 'code_product' => $item->code_product,
-                'quantity'     => $item->quantity,
-                'price'        => $item->product->price,
-                'subtotal'     => $item->subtotal,
+                'quantity' => $item->quantity,
+                'price' => $item->product->price,
+                'subtotal' => $item->subtotal,
             ]);
         }
 
-        // Hapus item yang telah dipesan dari keranjang
-        Cart::where('user_email', $userEmail)
-            ->whereIn('code_cart', $selectedIds)
-            ->delete();
-        
+        // Hapus item yang sudah diorder dari keranjang (bukan semua!)
+        Cart::whereIn('code_cart', $selectedItems)->delete();
 
-        return redirect()->route('home_page')->with('success', 'Pesanan berhasil dibuat!');
+        return redirect()->route('home_page')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
     }
+
+
 }

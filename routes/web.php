@@ -136,9 +136,9 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::put('/cart/update/{code_product}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
     Route::delete('/cart/remove/{code_product}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
     Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
-    Route::post('/cart/checkout-preview', [CheckoutController::class, 'showCheckoutPage'])->name('checkout.preview');
-    Route::post('/checkout/submit', [CheckoutController::class, 'checkout'])->name('checkout.submit');
-
+    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+        
     //search
     Route::get('/search', [productController::class, 'search'])->name('search');
 });
