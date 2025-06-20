@@ -150,6 +150,9 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::post('/inbox/send-message', [InboxController::class, 'sendMessage'])->name('inbox.send-message');
     
     Route::get('/order', [OrderController::class, 'order'])->name('order');
+    Route::get('/order/{order}/confirm', [OrderController::class, 'confirm'])->name('order.confirm');
+    Route::get('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
+
     
     Route::get('/sales', [SalesController::class, 'sales'])->name('sales');
 

@@ -108,7 +108,7 @@
   <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-auto animate-slideUp">
     <div class="bg-blue-700 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
       <h2 class="text-lg font-semibold">Detail Pembayaran</h2>
-      <button type="button" onclick="closePopup()" class="hover:opacity-80">✕</button>
+      <button type="button" onclick="removeFile(); closePopup()" class="hover:opacity-80">✕</button>
     </div>
 
     <div class="px-6 py-4 space-y-5">
@@ -157,10 +157,10 @@
     </div>
 
     <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex space-x-3">
-      <button type="button" onclick="closePopup()" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded font-medium shadow transition">
+      <button type="button" onclick="confirmPaymentProof()" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded font-medium shadow transition">
         Kirim Bukti
       </button>
-      <button type="button" onclick="closePopup()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded font-medium transition">
+      <button type="button" onclick="removeFile(); closePopup()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded font-medium transition">
         Batal
       </button>
     </div>
@@ -183,20 +183,46 @@
     document.body.style.overflow = 'hidden';
   }
 
+  function confirmPaymentProof() {
+    document.getElementById('popupOverlay').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+
+    // Jangan hapus apapun di sini! Karena kita ingin simpan file & metode pembayaran.
+  }
+
+
   function closePopup() {
     document.getElementById('popupOverlay').classList.add('hidden');
     document.body.style.overflow = 'auto';
+
+    // Reset file input dan preview
+    removeFile(); // <--- ini penting, pastikan file dan tombol Place Order direset
+
+    // Reset metode pembayaran
+    document.getElementById('selectedPaymentMethod').value = '';
+
+    // Reset tampilan bank info
+    document.getElementById('bankName').textContent = '-';
+    document.getElementById('accountName').textContent = 'A.n. -';
+    document.getElementById('accountNumber').textContent = '-';
+    document.getElementById('bankLogo').src = '';
+
+    // Reset radio button pilihan
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => radio.checked = false);
   }
+
+
 
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => alert('Tersalin ke clipboard!'));
   }
 
   function removeFile() {
-    fileInput.value = '';
-    filePreview.classList.add('hidden');
-    submitBtn.setAttribute('disabled', true);
+    fileInput.value = '';                         // reset input file
+    filePreview.classList.add('hidden');          // sembunyikan preview
+    submitBtn.setAttribute('disabled', true);     // disable tombol Place Order
   }
+
 
   fileInput?.addEventListener('change', (event) => {
     const file = event.target.files[0];

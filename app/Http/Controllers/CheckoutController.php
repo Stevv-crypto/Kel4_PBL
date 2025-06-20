@@ -79,9 +79,12 @@ class CheckoutController extends Controller
         $orderCode = 'ORD-' . strtoupper(Str::random(10));
 
         // Simpan file bukti pembayaran
-        $file = $request->file('payment_proof');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('public/payment_proofs', $fileName);
+        //$file = $request->file('payment_proof');
+        //$fileName = time() . '_' . $file->getClientOriginalName();
+        //$filePath = $file->storeAs('public/payment_proofs', $fileName);
+        // Simpan bukti pembayaran
+        $imagePath = $request->file('payment_proof')->store('payment_proofs', 'public');
+
 
         // Simpan order ke tabel `orders`
         $order = Order::create([
@@ -90,8 +93,10 @@ class CheckoutController extends Controller
             'payment_id' => $request->payment_method,
             'total_price' => $total,
             'status' => 'waiting',
-            'payment_proof' => 'payment_proofs/' . $fileName,
+            //'payment_proof' => 'payment_proofs/' . $fileName,
+            'payment_proof' => $imagePath,
         ]);
+
 
         // Simpan item pesanan ke tabel `order_items`
         foreach ($cartItems as $item) {
@@ -107,8 +112,7 @@ class CheckoutController extends Controller
         // Hapus item yang sudah diorder dari keranjang (bukan semua!)
         Cart::whereIn('code_cart', $selectedItems)->delete();
 
-        return redirect()->route('home_page')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
+        return redirect()->route('invoice.show')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
     }
-
-
+    
 }
