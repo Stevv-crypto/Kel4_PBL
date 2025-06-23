@@ -3,38 +3,28 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     protected $primaryKey = 'order_code';
-    public $incrementing = false; // Karena order_code bukan auto-increment
+    public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'order_code',
-        'user_id',
-        'payment_id',
-        'status',
-        'total_price',
-        'payment_proof',
+        'order_code', 'user_id', 'payment_id', 'status', 'total_price', 'payment_proof'
     ];
 
-    // Relasi: order dimiliki oleh satu user
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi: order memakai satu metode pembayaran
-    public function payment(): BelongsTo
+    public function payment()
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Payment::class, 'payment_id');
     }
 
-    // Relasi: order punya banyak item
-    public function orderItems(): HasMany
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'order_code', 'order_code');
     }
