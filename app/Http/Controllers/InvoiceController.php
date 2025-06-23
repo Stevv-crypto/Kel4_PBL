@@ -1,50 +1,28 @@
 <?php
+
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
 
 class InvoiceController extends Controller
 {
-    public function showInvoice()
+    public function show($order_code)
     {
-        // Data dummy
-        $order = [
-            'id' => 'ORD12345',
-            'date' => '2025-05-14',
-            'name' => 'AIIS',
-            'address' => 'batu aji city',
-            'phone' => '123-456-7890',
-            'payment_method' => 'Credit Card',
-        ];
+        // Ambil data order dari tabel orders beserta relasi user dan payment
+        $order = Order::with(['user', 'payment'])
+            ->where('order_code', $order_code)
+            ->firstOrFail();
 
-        // Data produk dummy
-        $invoiceProducts = [
-            [
-                'id' => 1,
-                'image_path' => 'image/12.png',
-                'name' => 'Fan',
-                'price' => 400000,
-                'category' => 'Fan',
-                'stock' => 15,
-                'description' => 'Fan listrik dengan kecepatan tinggi untuk mendinginkan ruangan.',
-                'material' => 'Plastik dan logam',
-                'feature' => 'Kecepatan angin dapat diatur, hemat energi'
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'image/3.png',
-                'name' => 'TV-Samsung',
-                'price' => 3000000,
-                'category' => 'Television',
-                'stock' => 10,
-                'description' => 'Televisi Samsung dengan resolusi 4K dan teknologi pintar.',
-                'material' => 'Kaca dan plastik',
-                'feature' => 'Resolusi 4K, Smart TV, Wi-Fi built-in'
-            ],
-        ];
+        // Ambil data produk dari tabel order_items beserta relasi product
+        $invoiceProducts = OrderItem::with('product')
+            ->where('order_code', $order_code)
+            ->get();
 
-        // Menghitung sub-total dari harga produk
-        $subTotal = array_sum(array_column($invoiceProducts, 'price'));
+        // Hitung subtotal
+        $subTotal = $invoiceProducts->sum('subtotal');
 
-        // Mengembalikan view dengan data yang sudah diolah
         return view('pages.pembeli.invoice', compact('order', 'invoiceProducts', 'subTotal'));
     }
 }

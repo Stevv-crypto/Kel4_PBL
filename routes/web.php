@@ -322,16 +322,12 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
 
-    //Invoice
-    Route::post('/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
-    Route::get('/invoice', [InvoiceController::class, 'showInvoice'])->name('invoice.show');
-<<<<<<< HEAD
+    
     
 });
 
 //search
 Route::get('/search', [productController::class, 'search'])->name('search');
 
-=======
-});
->>>>>>> cc413cb8605208df32e700451f1a283e818e3fba
+//invoice
+Route::get('/invoice/{order_code}', [InvoiceController::class, 'show'])->name('invoice.show');

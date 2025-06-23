@@ -111,8 +111,8 @@ class CheckoutController extends Controller
 
         // Hapus item yang sudah diorder dari keranjang (bukan semua!)
         Cart::whereIn('code_cart', $selectedItems)->delete();
+        return redirect()->route('invoice.show', ['order_code' => $order->order_code]);
 
-        return redirect()->route('invoice.show')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
     }
     
 }
