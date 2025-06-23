@@ -2,57 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Order;
-
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    // Tampilkan halaman order list
-    public function order()
+    // Menampilkan daftar semua order
+    public function index()
     {
-        // Kalau pakai database, bisa ambil data dari model Order:
-        // $orders = Order::all();
-
-        // Sekarang karena datanya masih di client-side (Alpine.js), kita cukup return view
-        return view('pages.admin.order');
-    }
-    // Tampilkan detail 1 order
-    public function show(Order $order)
-    {
-        $order->load('user', 'orderItems', 'payment');
-        return view('components.admin.header', compact('order'));
+        $orders = Order::with(['user', 'payment', 'orderItems.product'])->get();
+        return view('pages.admin.order', compact('orders'));
     }
 
-    // Konfirmasi pesanan
+    // Konfirmasi pesanan (ubah status menjadi 'sent')
     public function confirm(Order $order)
     {
-        if ($order->status === 'waiting') {
-            $order->status = 'processing';
-            $order->save();
-        }
-
-        return redirect()->back()->with('success', 'Order berhasil dikonfirmasi.');
-    }
-
-    // Tolak pesanan
-    public function reject(Order $order)
-    {
-        if ($order->status === 'waiting') {
-            $order->status = 'rejected';
-            $order->save();
-        }
-
-        return redirect()->back()->with('error', 'Order telah ditolak.');
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-        $order->status = $request->input('status');
+        $order->status = 'sent';
         $order->save();
 
-        return response()->json(['message' => 'Status updated successfully']);
+        return redirect()->route('order')->with('success', 'Order confirmed successfully.');
     }
+
+    // Tolak pesanan (ubah status menjadi 'rejected')
+    public function reject(Order $order)
+    {
+        $order->status = 'rejected';
+        $order->save();
+
+        return redirect()->route('order')->with('error', 'Order rejected.');
+    }
+
+    public function updateStatus(Request $request, Order $order)
+{
+    $validated = $request->validate([
+        'status' => 'required|in:processing,sent,complete,rejected',
+    ]);
+
+    $order->status = $validated['status'];
+    $order->save();
+
+    return redirect()->back()->with('success', 'Order status updated.');
+}
 }
