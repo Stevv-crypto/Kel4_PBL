@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use App\Models\Order;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,17 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('cartCount', $cartCount);
+        });
+
+        // Untuk header admin: kirim notifikasi order (status = WAITING)
+        View::composer('components.admin.header', function ($view) {
+            $waitingOrders = Order::with('orderItems','user', 'payment')
+                ->where('status', 'WAITING')
+                ->latest()
+                ->take(3)
+                ->get();
+
+            $view->with('waitingOrders', $waitingOrders);
         });
     
     }
