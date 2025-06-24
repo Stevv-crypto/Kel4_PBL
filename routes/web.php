@@ -32,6 +32,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\SalesReportController;
 
 Route::get('/', function () {
     return view('landing');
@@ -201,6 +202,8 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
+
+    Route::get('/admin/sales-report', [SalesReportController::class, 'index'])->name('sales.report');
 
     
 });
