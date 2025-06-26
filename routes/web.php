@@ -16,6 +16,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\OrderListController;
 use App\Livewire\Chat\Index;
 
 // Namespace Penjual
@@ -111,7 +112,7 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
 
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -139,6 +140,11 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
     Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+    //orderLits
+    Route::get('/orderList', [OrderListController::class, 'index'])->name('order.list');
+    Route::get('/order/invoice/{order_code}', [OrderListController::class, 'invoice'])->name('order.invoice');
+
         
     //search
     Route::get('/search', [productController::class, 'search'])->name('search');
