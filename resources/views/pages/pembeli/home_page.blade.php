@@ -20,13 +20,13 @@
             @endif
         </div>
 
-        @if ($latestProduct && $latestProduct->merk && $latestProduct->merk->logo)
-            <img src="{{ asset('storage/uploads/' . $latestProduct->merk->logo) }}" 
-                alt="{{ $latestProduct->merk->name }}" 
-                class="w-40 md:w-56 lg:w-64 max-h-48 object-contain shadow-lg" />
-        @elseif ($latestProduct && $latestProduct->image)
-            <img src="{{ asset('storage/uploads/' . $latestProduct->image) }}" 
+        @if ($latestProduct && $latestProduct->image)
+            <img src="{{ asset('storage/' . $latestProduct->image) }}" 
                 alt="{{ $latestProduct->name }}" 
+                class="w-40 md:w-56 lg:w-64 max-h-48 object-contain shadow-lg" />
+        @elseif ($latestProduct && $latestProduct->merk && $latestProduct->merk->logo)
+            <img src="{{ asset('storage/logos/' . $latestProduct->merk->logo) }}" 
+                alt="{{ $latestProduct->merk->name }}" 
                 class="w-40 md:w-56 lg:w-64 max-h-48 object-contain shadow-lg" />
         @else
             <img src="{{ asset('image/20.png') }}" 

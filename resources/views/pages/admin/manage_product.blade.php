@@ -28,7 +28,7 @@
                     <tr class="border-t border-gray-300">
                         <td class="p-2">
                             @if($product->image)
-                                <img src="{{ asset($product->image) }}" alt="Product Image" class="w-16 h-16 object-cover rounded">
+                                <img src="{{ asset('storage/'. $product->image) }}" alt="Product Image" class="w-16 h-16 object-cover rounded">
                             @else
                                 <span class="text-gray-400 text-sm">No Image</span>
                             @endif

@@ -46,7 +46,7 @@ class SellerController extends Controller
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('uploads', 'public');
-            $validatedData['image'] = 'storage/' . $imagePath;
+            $validatedData['image'] = $imagePath;
         }
 
         DB::transaction(function () use ($validatedData) {

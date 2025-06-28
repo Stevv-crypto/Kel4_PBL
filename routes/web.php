@@ -39,18 +39,6 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('profile', function () {
-    return view('pages/profile');
-});
-
-Route::get('about', function () {
-    return view('pages/about');
-});
-
-Route::get('contact', function () {
-    return view('pages/contact');
-});
-
 Route::get('/orderList', function(){
     return view('pages/pembeli/orderList');
 });
@@ -61,22 +49,6 @@ Route::get('/forget_password1', function() {
 
 Route::get('/forgot_password2', function() {
     return view('pages/pembeli/forgot_password2');
-});
-
-Route::get('/productAdmin', function() {
-    return view('pages/admin/productAdmin');
-});
-
-Route::get('/editProduk', function() {
-    return view('pages/admin/editProduk');
-});
-
-Route::get('/setting', function() {
-    return view('pages/admin/setting');
-});
-
-Route::get('/manage_product2', function() {
-    return view('pages/admin/manage_product2');
 });
 
 Route::get('/register', [AuthController::class, 'tampilRegister'])->name('tampilRegister');
@@ -107,27 +79,35 @@ Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->
 Route::get('/reset-password', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
-Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
-    // Home Page
-    Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
+// Home Page
+Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
 
+Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+
+Route::get('/about', [AboutController::class, 'about'])->name('about');
+
+Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
+
+//search
+Route::get('/search', [productController::class, 'search'])->name('search');
+
+Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
     // Profile
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
     Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');
     Route::get('/productAdmin', [ProductAdminController::class, 'tampilProduk'])->name('produkAdmin');
     Route::get('category', [ProductController::class, 'tampilKategori'])->name('category');
-    Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
     Route::get('/category', [ProductController::class, 'tampilKategori'])->name('tampilKategori');
 
     // Change Password
     Route::get('/change-password', [PasswordController::class, 'edit'])->name('change.password');
     Route::post('/change-password', [PasswordController::class, 'update'])->name('change.password.update');
 
-    Route::get('/about', [AboutController::class, 'about'])->name('about');
     Route::get('/product', [productController::class, 'tampilProduk'])->name('products');
     Route::get('/products', [ViewAllController::class, 'tampilProduk'])->name('products');
     Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');
@@ -144,10 +124,6 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     //orderLits
     Route::get('/orderList', [OrderListController::class, 'index'])->name('order.list');
     Route::get('/order/invoice/{order_code}', [OrderListController::class, 'invoice'])->name('order.invoice');
-
-        
-    //search
-    Route::get('/search', [productController::class, 'search'])->name('search');
 });
 
 // Admin route
@@ -162,8 +138,6 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::post('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
     Route::post('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 
-
-    
     Route::get('/sales', [SalesController::class, 'sales'])->name('sales');
 
     //manageproduct
@@ -182,12 +156,12 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
         Route::get('/create', [TimController::class, 'create'])->name('team.create');
         Route::post('/store', [TimController::class, 'store'])->name('team.store');
 
-    //merk
-    Route::get('admin/merk', [MerkController::class, 'index'])->name('merk.index');
-    Route::post('admin/merk', [MerkController::class, 'store'])->name('merk.store');
-    Route::put('admin/merk/{merk}', [MerkController::class, 'update'])->name('merk.update');
-    Route::delete('admin/merk/{merk}', [MerkController::class, 'destroy'])->name('merk.destroy');
-    Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus'])->name('merk.updateStatus');
+        //merk
+        Route::get('admin/merk', [MerkController::class, 'index'])->name('merk.index');
+        Route::post('admin/merk', [MerkController::class, 'store'])->name('merk.store');
+        Route::put('admin/merk/{merk}', [MerkController::class, 'update'])->name('merk.update');
+        Route::delete('admin/merk/{merk}', [MerkController::class, 'destroy'])->name('merk.destroy');
+        Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus'])->name('merk.updateStatus');
     });
 
     //stock
@@ -202,12 +176,10 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     //category
     Route::resource('category', CategoryController::class);
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
-    Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
     Route::get('/category/{code}/product', [CategoryController::class, 'showProduct'])->name('category.product');
     Route::patch('/category/{code}/status', [CategoryController::class, 'updateStatus'])->name('category.updateStatus');
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
-    Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
 
     Route::get('/admin/sales-report', [SalesReportController::class, 'index'])->name('sales.report');
 

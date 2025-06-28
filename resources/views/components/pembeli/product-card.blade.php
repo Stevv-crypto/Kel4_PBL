@@ -4,7 +4,7 @@
     <!-- Gambar Produk -->
     <div class="mb-4">
         @if ($product->image)
-            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+            <img src="{{ asset('storage/'. $product->image) }}" alt="{{ $product->name }}"
                  class="w-full h-20 object-contain mx-auto transition-transform duration-300 group-hover:scale-105" />
         @else
             <div class="w-full h-20 flex items-center justify-center bg-gray-100 text-gray-400 text-sm">

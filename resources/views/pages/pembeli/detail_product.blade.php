@@ -11,7 +11,7 @@
     <!-- Image Section -->
     <div class="w-full md:w-1/2 bg-gray-100 rounded-lg p-4 flex justify-center items-center">
       @if ($product->image)
-        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="object-cover max-h-[420px] w-full max-w-md" />
+        <img src="{{ asset('storage/'. $product->image) }}" alt="{{ $product->name }}" class="object-cover max-h-[420px] w-full max-w-md" />
       @else
         <div class="text-gray-500">No image available</div>
       @endif
@@ -118,10 +118,6 @@
     }
   };
 </script>
-<<<<<<< HEAD
 
-@endsection
-=======
 @endif
 @endsection
->>>>>>> cc413cb8605208df32e700451f1a283e818e3fba
