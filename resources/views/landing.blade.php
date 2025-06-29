@@ -326,59 +326,7 @@
 
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <div class="text-2xl font-bold blue-gradient bg-clip-text text-transparent mb-4">
-                        E-TechnoCart
-                    </div>
-                    <p class="text-gray-400 mb-4">
-                        Platform e-commerce terpercaya untuk elektronik rumah tangga berkualitas
-                    </p>
-                    <div class="flex space-x-4">
-                        <i class='bx bxl-facebook text-2xl text-blue-500 cursor-pointer hover:text-blue-400'></i>
-                        <i class='bx bxl-instagram text-2xl text-pink-500 cursor-pointer hover:text-pink-400'></i>
-                        <i class='bx bxl-twitter text-2xl text-blue-400 cursor-pointer hover:text-blue-300'></i>
-                        <i class='bx bxl-youtube text-2xl text-red-500 cursor-pointer hover:text-red-400'></i>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="font-bold mb-4">Produk</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Smart TV</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Kulkas</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Mesin Cuci</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">AC</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="font-bold mb-4">Layanan</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Garansi</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Pengiriman</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Instalasi</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Support</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="font-bold mb-4">Kontak</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li class="flex items-center"><i class='bx bx-phone mr-2'></i> +62 812-3456-7890</li>
-                        <li class="flex items-center"><i class='bx bx-envelope mr-2'></i> info@etechnocart.com</li>
-                        <li class="flex items-center"><i class='bx bx-map mr-2'></i> Jakarta, Indonesia</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 E-TechnoCart. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    @include('partials.footer')
 
     <script>
         // Smooth scrolling for navigation links
