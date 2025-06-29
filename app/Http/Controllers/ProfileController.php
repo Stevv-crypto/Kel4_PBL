@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function edit()
+    public function show()
     {
         $user = Auth::user();
         return view('pages.pembeli.profile', compact('user'));

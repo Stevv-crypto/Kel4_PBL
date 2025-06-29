@@ -9,7 +9,7 @@
 
         <!-- Breadcrumb -->
         <div class="flex items-center gap-3">
-            <a href="{{ url('/') }}" class="text-black hover:underline opacity-50">Home</a>
+            <a href="{{ url('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
             <div class="h-4 border-l border-gray-500 opacity-70 rotate-45"></div>
             <a href="{{ route('profile') }}" class="text-black hover:underline">My Account</a>
         </div>
@@ -24,7 +24,7 @@
 
             <div>
                 <span class="text-black font-semibold">My Orders</span>
-                <a href="/orderList" class="text-blue-500 hover:underline block">List Order</a>
+                <a href="{{ route('order.list') }}" class="text-blue-500 hover:underline block">List Order</a>
             </div>
         </div>
     </div>

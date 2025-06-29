@@ -9,7 +9,7 @@
     <div class="max-w-4xl mx-auto px-10 flex flex-row items-center gap-3 mt-10">
       <a href="{{ route('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
       <div class="h-4 border-l border-gray-500 opacity-70 transform rotate-45"></div>
-      <span class="text-black font-semibold">Tentang Perusahaan</span>
+      <span class="text-black font-semibold">About Company</span>
     </div>
 
     <!-- Company Introduction -->

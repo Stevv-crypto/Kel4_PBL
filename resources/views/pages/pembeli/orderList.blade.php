@@ -1,77 +1,112 @@
 @extends('layouts.app')
 
+@section('title', 'My Orders')
+
 @section('content')
+<div class="flex flex-col md:flex-row gap-8 md:gap-12 mt-6">
+  
+  <!-- Sidebar Kiri -->
+  <div class="w-full md:w-1/3 flex flex-col justify-start items-start gap-8 px-4 md:px-6">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-3">
+      <a href="{{ url('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
+      <div class="h-4 border-l border-gray-500 opacity-70 rotate-45"></div>
+      <a href="{{ route('profile') }}" class="text-black hover:underline">My Account</a>
+    </div>
 
-<!-- Wrapper Utama Grid 2 Kolom -->
-<div class="flex flex-col md:flex-row min-h-screen">
+    <!-- Menu -->
+    <div class="flex flex-col items-start gap-6">
+      <div>
+        <span class="text-black font-semibold">Manage My Account</span>
+        <a href="{{ route('profile') }}" class="text-blue-500 hover:underline block">My Profile</a>
+        <a href="{{ route('change.password') }}" class="text-blue-500 hover:underline block">Change Password</a>
+      </div>
 
-    <!-- Sidebar -->
-    <aside class="w-full md:w-1/3 mt-8 md:mt-12 px-6 md:px-10">
-        <!-- Breadcrumb -->
-        <nav class="flex items-center gap-3 mb-8">
-            <a href="home_page" class="text-black hover:underline opacity-50">Home</a>
-            <div class="h-4 border-l border-gray-500 opacity-70 rotate-45"></div>
-            <a href="{{ route('profile') }}" class="text-black hover:underline">My Orders</a>
-        </nav>
+      <div>
+        <span class="text-black font-semibold">My Orders</span>
+        <a href="{{ route('order.list') }}" class="text-blue-500 hover:underline block">List Order</a>
+      </div>
+    </div>
+  </div>
 
-        <!-- Sidebar Menu -->
-        <div class="flex flex-col gap-6">
-            <!-- Manage Account -->
-            <div>
-                <h3 class="text-black font-semibold">My Account</h3>
-                <a href="{{ route('profile') }}" class="text-blue-500 hover:underline block mt-1">My Profile</a>
-            </div>
+  <!-- Konten Kanan -->
+  <div class="w-full md:w-2/3 space-y-6 px-4 md:px-0">
+    <h2 class="text-2xl font-bold">My Order</h2>
 
-            <!-- Orders -->
-            <div>
-                <h3 class="text-black font-semibold">My Orders</h3>
-                <a href="/orderList" class="text-blue-500 hover:underline block mt-1">List Order</a>
-            </div>
-        </div>
-    </aside>
+    <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="bg-gray-100 text-xs uppercase text-gray-600">
+            <th class="p-3">Product</th>
+            <th class="p-3">Total</th>
+            <th class="p-3">Status</th>
+            <th class="p-3">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($orders as $order)
+          <tr class="border-t hover:bg-gray-50">
+            <td class="p-3">
+              <ul class="space-y-2">
+                @foreach($order->orderItems as $item)
+                <li class="flex items-center gap-2">
+                  <img src="{{ asset($item->product->image ?? 'placeholder.png') }}" alt="{{ $item->product->name }}" class="w-10 h-10 object-cover rounded">
+                  <div>
+                    <div>{{ $item->product->name ?? 'N/A' }}</div>
+                    <div class="text-xs text-gray-500">x{{ $item->quantity }}</div>
+                  </div>
+                </li>
+                @endforeach
+              </ul>
+            </td>
 
-    <!-- Konten Utama -->
-    <main class="w-full md:w-2/3 mt-12 px-4 md:px-6">
-        <section class="w-full">
-            <div class="bg-white rounded-lg shadow overflow-x-auto">
-                <table class="min-w-full text-left text-sm">
-                    <thead class="bg-gray-200 text-gray-700">
-                        <tr>
-                            <th class="px-6 py-3 whitespace-nowrap">Product</th>
-                            <th class="px-6 py-3 whitespace-nowrap">Price</th>
-                            <th class="px-6 py-3 whitespace-nowrap">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        @php
-                            $orders = [
-                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Finish', 'bg' => 'bg-teal-400'],
-                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Confirm', 'bg' => 'bg-green-500'],
-                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Process', 'bg' => 'bg-amber-400'],
-                                ['image' => 'image/3.png', 'name' => 'TV-LG', 'price' => '$650', 'status' => 'Rejected', 'bg' => 'bg-red-500'],
-                            ];
-                        @endphp
+            <td class="p-3 font-semibold text-green-700 whitespace-nowrap">
+              Rp {{ number_format($order->total_price, 0, ',', '.') }}
+            </td>
 
-                        @foreach ($orders as $order)
-                        <tr class="border-b">
-                            <td class="flex items-center gap-4 py-6 px-6 whitespace-nowrap">
-                                <img src="{{ asset($order['image']) }}" alt="{{ $order['name'] }}" class="w-12 h-auto">
-                                {{ $order['name'] }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $order['price'] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="{{ $order['bg'] }} text-white py-1 px-3 rounded-lg text-sm">
-                                    {{ $order['status'] }}
-                                </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+            <td class="p-3 capitalize">
+              <span class="px-2 py-1 rounded
+                @switch($order->status)
+                  @case('waiting') bg-yellow-100 text-yellow-800 @break
+                  @case('processing') bg-blue-100 text-blue-800 @break
+                  @case('sent') bg-purple-100 text-purple-800 @break
+                  @case('complete') bg-green-100 text-green-800 @break
+                  @case('rejected') bg-red-100 text-red-800 @break
+                @endswitch
+              ">
+                {{ $order->status }}
+              </span>
+            </td>
 
+            <td class="p-3">
+              <a href="{{ route('order.invoice', $order->order_code) }}" class="text-blue-600 hover:underline">
+                Details
+              </a>
+            </td>
+          </tr>
+
+          <!-- Resi Detail -->
+          <tr id="resi-{{ $order->order_code }}" class="hidden">
+            <td colspan="4" class="p-3 bg-gray-50 text-sm text-gray-700">
+              <strong>Resi Pengiriman:</strong> {{ $order->resi ?? 'Belum tersedia' }}
+            </td>
+          </tr>
+
+          @empty
+          <tr>
+            <td colspan="4" class="text-center text-gray-500 py-4">No orders found.</td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
+<script>
+  function toggleResi(code) {
+    const row = document.getElementById('resi-' + code);
+    row.classList.toggle('hidden');
+  }
+</script>
 @endsection

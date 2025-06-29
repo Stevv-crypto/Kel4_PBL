@@ -14,6 +14,7 @@ class ProductController extends Controller
         $latestProduct = Product::with(['merk', 'stock'])
                             ->orderBy('created_at', 'desc')
                             ->first();
+                           
 
         // Ambil 8 produk terbaru lainnya untuk ditampilkan, juga beserta merk dan stock
         $products = Product::with(['merk', 'stock'])
