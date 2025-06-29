@@ -1,237 +1,378 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>E-Technocart - Toko Elektronik</title>
-
-    <!-- Google Fonts: Playfair Display + Inter -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
-
-
-
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-            body {
-                font-family: 'Inter', sans-serif;
-                background-color: #1a202c;
-                color: #e2e8f0;
-            }
-
-            h1,
-            h2,
-            h3,
-            h4 {
-                font-family: 'Playfair Display', serif;
-            }
-
-            @keyframes slideInLeft {
-                0% {
-                    opacity: 0;
-                    transform: translateX(-100px);
-                }
-
-                100% {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-
-            .animate-slide-in-left {
-                animation: slideInLeft 1s ease-out forwards;
-            }
-
-            a {
-                transition: color 0.3s ease;
-            }
-
-            a:hover {
-                color: #3b82f6;
-            }
-        </style>
-    @endif
-</head>
-
-<body class="bg-gray-900 text-gray-100">
-
-    <!-- Hero Section (DARK) -->
-    <header class="relative h-screen bg-cover bg-center" style="background-image: url('image/bgsec1.jpg');">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/70 to-black/80"></div>
-        <div class="relative z-10 flex flex-col justify-between h-full">
-            <nav class="flex justify-between items-center px-10 py-6 text-white">
-                <div class="text-3xl font-bold tracking-wide animate-slide-in-left">E-Technocart</div>
-                <div class="space-x-8 text-lg font-medium">
-                    <a href="{{ route('login') }}" class="hover:text-blue-400 animate-slide-in-left">Login</a>
-                    <a href="{{ route('dataRegister') }}"
-                        class="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg animate-slide-in-left transition">Register</a>
-                </div>
-            </nav>
-            <div class="flex-grow flex items-center justify-center text-center px-6">
-                <div class="max-w-3xl">
-                    <h1 class="text-6xl font-bold mb-6 leading-tight animate-slide-in-left drop-shadow-lg">Toko Online
-                        Elektronik Rumah Tangga</h1>
-                    <p class="text-xl mb-8 font-light animate-slide-in-left drop-shadow-md">Belanja elektronik jadi
-                        lebih mudah dan terpercaya, dengan pilihan produk terbaik untuk kebutuhan rumah tangga Anda.</p>
-                    <a href="{{ route('home_page') }}"
-                        class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold animate-slide-in-left transition-shadow shadow-lg hover:shadow-xl">Belanja
-                        Sekarang</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Why Choose Us (LIGHT) -->
-    <section class="py-20 px-6 lg:px-16 bg-white text-gray-900">
-        <div class="flex flex-col lg:flex-row items-center gap-12 max-w-7xl mx-auto">
-            <div class="flex items-center justify-center w-full lg:w-1/2">
-                <img src="{{ asset('image/shop.png') }}"
-                    class="rounded-2xl max-h-[600px] w-auto object-contain shadow-2xl" alt="TV" />
-            </div>
-            <div class="w-full md:w-1/2">
-                <button
-                    class="text-sm bg-blue-100 text-blue-600 mb-3 font-semibold px-5 py-2 rounded-full tracking-wide">Why</button>
-                <h2 class="text-4xl font-bold leading-snug tracking-tight">
-                    should you <span class="font-extrabold text-blue-500 border-b-4 border-blue-400">choose</span><br />
-                    E-Technocart
-                </h2>
-                <div class="mt-10 space-y-8">
-                    @php
-                        $features = [
-                            ['icon' => 'fa-shipping-fast', 'title' => 'Pengiriman Cepat', 'desc' => 'Layanan pengiriman yang efisien dan terpercaya ke seluruh Indonesia.'],
-                            ['icon' => 'fa-plug-circle-bolt', 'title' => 'Produk Elektronik Terpercaya', 'desc' => 'Menjual barang elektronik rumah tangga berkualitas dan bergaransi resmi.'],
-                            ['icon' => 'fa-comments', 'title' => 'Dukungan Pelanggan yang Responsif', 'desc' => 'Tim kami siap membantu setiap pertanyaan atau kendala pelanggan.'],
-                        ];
-                    @endphp
-
-                    @foreach ($features as $feature)
-                        <div class="flex items-start gap-5">
-                            <div class="text-blue-500 text-3xl mt-1">
-                                <i class="fas {{ $feature['icon'] }}"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-semibold text-gray-900">{{ $feature['title'] }}</h4>
-                                <p class="text-gray-600 text-base leading-relaxed">{{ $feature['desc'] }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Our Team (DARK + MODAL with Taller Cards) -->
-<section class="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-100 relative">
-    <div class="absolute inset-0 bg-gradient-to-tr from-blue-900 via-transparent to-purple-900 opacity-40"></div>
-    <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        <h2 class="text-5xl font-extrabold mb-4 tracking-wide font-serif drop-shadow-lg">Development Team</h2>
-        <p class="max-w-2xl mx-auto mb-16 text-gray-300 text-lg font-light italic">Temui individu-individu berdedikasi di balik aplikasi kami.</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-TechnoCart - Elektronik Rumah Tangga Terpercaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-            @php
-                $teams = [
-                    ['img' => 'tepenbg.png', 'name' => 'Steven Marcell S', 'role' => 'Leader & Fullstack Developer'],
-                    ['img' => 'ais2.png', 'name' => 'Aisyah Nurwa Hida', 'role' => 'Fullstack Developer'],
-                    ['img' => 'naylah3.png', 'name' => 'Naylah Amirah A', 'role' => 'Fullstack Developer'],
-                    ['img' => 'Fahmibg.png', 'name' => 'Fahmi Ahmad F', 'role' => 'Fullstack Developer'],
-                ];
-            @endphp
-
-            @foreach ($teams as $team)
-                <div x-data="{ open: false }"
-                    class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:-translate-y-3 hover:scale-105 cursor-pointer min-h-[28rem] flex flex-col">
-                    
-                    <img src="{{ asset('image/' . $team['img']) }}" @click="open = true"
-                        class="h-64 w-full object-cover object-top filter brightness-90 hover:brightness-110 transition duration-300"
-                        alt="Tim {{ $team['name'] }}" />
-                    
-                    <div class="p-6 text-left flex-grow flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-serif font-medium text-xl text-white mb-1 leading-tight">{{ $team['name'] }}</h3>
-                            <p class="text-blue-400 text-sm font-medium tracking-wide">{{ $team['role'] }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Modal -->
-                    <div x-show="open" x-transition @click.away="open = false"
-                        class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-                        
-                        <div class="bg-white text-gray-900 rounded-xl shadow-xl p-8 max-w-md w-full relative max-h-[90vh] overflow-y-auto">
-                            <button @click="open = false"
-                                class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl font-bold">&times;</button>
-
-                            <div class="flex flex-col items-center space-y-4 px-2">
-                                <img src="{{ asset('image/' . $team['img']) }}"
-                                    class="w-32 h-32 rounded-full object-cover object-top shadow-md ring-4 ring-blue-100 transition duration-300" />
-                                <h3 class="text-2xl font-bold text-center">{{ $team['name'] }}</h3>
-                                <p class="text-blue-600 text-sm font-medium text-center">{{ $team['role'] }}</p>
-                                <p class="text-sm text-gray-700 text-justify leading-relaxed px-1">
-                                    @if ($team['name'] === 'Steven Marcell S')
-                                        Pemimpin proyek yang bertanggung jawab dalam tim, front-end back-end, dan pengelolaan Git. terlibat UI/UX & Deployment.
-                                    @elseif ($team['name'] === 'Aisyah Nurwa Hida')
-                                        Menangani fitur frontend dan backend serta menangani role pembeli dari melihat kategori merk hingga membeli barang. Terlibat UI/UX & Deployment.
-                                    @elseif ($team['name'] === 'Naylah Amirah A')
-                                        Menangani fitur front-end back-end, serta fokus pada sistem transaksi, fitur checkout, validasi form pembayaran. Terlibat UI/UX & Deployment.
-                                    @elseif ($team['name'] === 'Fahmi Ahmad F')
-                                        Menangani front-end back-end serta berkontribusi di bagian pengaturan admin, sistem pesan pembeli-penjual. Terlibat UI/UX & Deployment.
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Modal -->
-
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+        }
+        
+        .blue-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2);
+        }
+        
+        .animate-fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: fadeInLeft 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            animation: fadeInRight 0.8s ease-out forwards;
+        }
+        
+        .animate-bounce-in {
+            opacity: 0;
+            transform: scale(0.3);
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        
+        .animate-pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold blue-gradient bg-clip-text text-transparent animate-bounce-in">
+                    E-TechnoCart
                 </div>
-            @endforeach
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{ route('home_page') }}" class="text-black text-base font-medium">Home</a>
+                    <a href="{{ route('contact') }}" class="text-black text-base font-medium">Contact</a>
+                    <a href="{{ route('about') }}" class="text-black text-base font-medium">About</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ route('login') }}" class="hidden md:block px-6 py-2 text-blue-600 hover:text-blue-800 transition-colors font-medium">
+                        Login
+                    </a>
+                    <a href="{{ route('dataRegister') }}" class="blue-gradient px-6 py-2 text-white rounded-full hover:shadow-lg transition-all duration-300 font-medium animate-pulse-glow">
+                        Register
+                    </a>
+                    <button class="md:hidden">
+                        <i class='bx bx-menu text-2xl'></i>
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
+    </nav>
 
-    <!-- Highlight Stats (LIGHT) -->
-    <section class="py-20 bg-white text-gray-900">
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <h2
-                class="text-5xl font-extrabold mb-4 tracking-wide font-serif bg-gradient-to-r from-indigo-600 via-blue-500 to-cyan-400 bg-clip-text text-transparent drop-shadow-md">
-                Project Milestones</h2>
-            <p class="text-gray-600 mb-16 max-w-2xl mx-auto text-lg font-light">Pencapaian utama selama proses
-                pengembangan aplikasi tugas akhir kami.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div
-                    class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-200 rounded-2xl p-10 hover:shadow-lg transition duration-300">
-                    <div class="text-5xl text-indigo-600 mb-4"><i class="fas fa-code"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Fullstack Development</h3>
-                    <p class="text-gray-700 text-base">Aplikasi dibangun menggunakan Laravel untuk backend dan Tailwind
-                        CSS untuk frontend.</p>
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/20 rounded-full float-animation"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-blue-400/30 rounded-full float-animation" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-blue-300/25 rounded-full float-animation" style="animation-delay: 2s;"></div>
+        
+        <div class="container mx-auto px-6 py-20">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-white">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-left">
+                        The Most Complete
+                        <span class="blue-gradient bg-clip-text text-transparent">Home Electronics</span>
+                        Collection
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 animate-fade-in-left" style="animation-delay: 0.2s;">
+                        Discover a wide range of high-quality electronic appliances for your home at the best prices, all with official warranties.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-left" style="animation-delay: 0.4s;">
+                        <a href="{{ route('products') }}" class="blue-gradient px-8 py-4 rounded-full text-white font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                            <i class='bx bx-shopping-bag mr-2'></i>
+                            Start Shopping
+                        </a>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-8 mt-12 animate-fade-in-left" style="animation-delay: 0.6s;">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400">500K+</div>
+                            <div class="text-gray-400">User</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400">10K+</div>
+                            <div class="text-gray-400">Product</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400">4.9★</div>
+                            <div class="text-gray-400">Rating</div>
+                        </div>
+                    </div>
                 </div>
-                <div
-                    class="bg-gradient-to-br from-blue-50 to-white border border-blue-200 rounded-2xl p-10 hover:shadow-lg transition duration-300">
-                    <div class="text-5xl text-blue-600 mb-4"><i class="fas fa-users-cog"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Tim Kolaboratif</h3>
-                    <p class="text-gray-700 text-base">Dikerjakan oleh tim beranggotakan 4 mahasiswa dengan pembagian
-                        peran yang seimbang.</p>
-                </div>
-                <div
-                    class="bg-gradient-to-br from-cyan-50 to-white border border-cyan-200 rounded-2xl p-10 hover:shadow-lg transition duration-300">
-                    <div class="text-5xl text-cyan-600 mb-4"><i class="fas fa-graduation-cap"></i></div>
-                    <h3 class="text-xl font-semibold mb-2">Tujuan Edukatif</h3>
-                    <p class="text-gray-700 text-base">Dirancang sebagai bagian dari proyek pembelajaran dan tugas
-                        project perkuliahan.</p>
+                
+                <div class="relative animate-fade-in-right">
+                    <!-- Phone Mockup -->
+                    <div class="relative mx-auto w-80 h-96 bg-gray-800 rounded-3xl p-2 shadow-2xl">
+                        <div class="w-full h-full bg-white rounded-2xl overflow-hidden">
+                            <!-- Phone Screen Content -->
+                            <img src="{{ asset('image/produkelektro.png') }}" 
+                                alt="Product Image" 
+                                class="w-full h-full object-cover rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Product Cards -->
+                    <div class="absolute -top-10 -left-10 product-card p-4 rounded-xl float-animation">
+                        <i class='bx bx-microwave text-2xl text-blue-400 mb-2'></i>
+                        <div class="text-white text-sm font-semibold">Official Warranty</div>
+                        <div class="text-blue-300 text-xs">Guaranteed Protection</div>
+                    </div>
+                    
+                    <div class="absolute -bottom-5 -right-10 product-card p-4 rounded-xl float-animation" style="animation-delay: 1.5s;">
+                        <i class='bx bx-car text-2xl text-green-400 mb-2'></i>
+                        <div class="text-white text-sm font-semibold">Free Shipping</div>
+                        <div class="text-green-300 text-xs">0% Delivery Cost</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Why Choose E-TechnoCart?</h2>
+                <p class="text-gray-600 text-lg max-w-3xl mx-auto">
+                    We offer the best electronic shopping experience with unmatched service quality.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-8 rounded-2xl hover:shadow-xl transition-all duration-300 card-hover scroll-animate">
+                    <div class="blue-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class='bx bx-certification text-2xl text-white'></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Official Warranty</h3>
+                    <p class="text-gray-600">All products come with an official warranty from trusted distributors and reliable after-sales service.</p>
+                </div>
+                
+                <div class="text-center p-8 rounded-2xl hover:shadow-xl transition-all duration-300 card-hover scroll-animate" style="animation-delay: 0.2s;">
+                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class='bx bx-package text-2xl text-white'></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Free Shipping</h3>
+                    <p class="text-gray-600">Nationwide free delivery with secure packaging.</p>
+                </div>
+                
+                <div class="text-center p-8 rounded-2xl hover:shadow-xl transition-all duration-300 card-hover scroll-animate" style="animation-delay: 0.4s;">
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class='bx bx-headphone text-2xl text-white'></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">24/7 Support</h3>
+                    <p class="text-gray-600">Our team is ready to assist with any questions or issues you may have.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Best-Selling Product Categories</h2>
+                <p class="text-gray-600 text-lg">Explore a wide selection of premium home electronics</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate">
+                    <div class="blue-gradient w-full h-40 rounded-xl flex items-center justify-center mb-6">
+                        <img src="{{ asset('image/smarttv.png') }}" alt="Smart Tv" class="object-cover h-full w-full rounded-xl">
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Smart TV </h3>
+                    <p class="text-gray-600 text-sm mb-4">Clear picture quality and smooth, uninterrupted streaming</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-blue-600 font-semibold">150+ Products</span>
+                        <i class='bx bx-chevron-right text-blue-600'></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.1s;">
+                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
+                        <img src="{{ asset('image/kulkas.png') }}" alt="Refrigerator" class="object-cover h-full w-full rounded-xl">
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Refrigerators & Freezers</h3>
+                    <p class="text-gray-600 text-sm mb-4">Keep your food fresh with advanced cooling technology</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-semibold">89+ Products</span>
+                        <i class='bx bx-chevron-right text-green-600'></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.2s;">
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
+                        <img src="{{ asset('image/mesincuci.png') }}" alt="Washing Machine" class="object-cover h-full w-full rounded-xl">
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Washing Machines</h3>
+                    <p class="text-gray-600 text-sm mb-4">Modern laundry solutions for every household</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-600 font-semibold">67+ Product</span>
+                        <i class='bx bx-chevron-right text-purple-600'></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.3s;">
+                    <div class="bg-gradient-to-r from-orange-500 to-red-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
+                        <img src="{{ asset('image/kipasangin.png') }}" alt="Cooling Fan" class="object-cover h-full w-full rounded-xl">
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Cooling Fans</h3>
+                    <p class="text-gray-600 text-sm mb-4">Modern designs with strong airflow — perfect for hot days</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-orange-600 font-semibold">200+ Produk</span>
+                        <i class='bx bx-chevron-right text-orange-600'></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Footer -->
     @include('partials.footer')
 
-</body>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all scroll-animate elements
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('bg-white/95');
+                nav.classList.remove('bg-white/80');
+            } else {
+                nav.classList.add('bg-white/80');
+                nav.classList.remove('bg-white/95');
+            }
+        });
+    </script>
+</body>
 </html>
