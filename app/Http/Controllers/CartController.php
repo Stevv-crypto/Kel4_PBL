@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Cart;
-use App\Models\Payment;
+// use App\Models\Payment;
 use App\Models\User;
 
 class CartController extends Controller
@@ -15,62 +15,6 @@ class CartController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    // Tambah produk ke keranjang
-    public function addToCart(Request $request, $code_product)
-    {
-        $product = Product::where('code_product', $code_product)->first();
-
-        if (!$product) {
-            return $request->wantsJson()
-                ? response()->json(['message' => 'Produk tidak ditemukan.'], 404)
-                : redirect()->back()->with('error', 'Produk tidak ditemukan.');
-        }
-
-        $quantity = max((int) $request->input('quantity', 1), 1);
-
-        $stock = $product->stock;
-
-        if (!$stock || $stock->stock < $quantity) {
-            return redirect()->back()->with('error', 'Stok produk tidak mencukupi.');
-        }
-
-        $userEmail = Auth::user()->email;
-        $subtotal = $product->price * $quantity;
-
-        $existing = Cart::where('code_product', $code_product)
-            ->where('user_email', $userEmail)
-            ->first();
-
-        if ($existing) {
-            $existing->quantity += $quantity;
-            $existing->subtotal = $existing->quantity * $product->price;
-            $existing->save();
-        } else {
-            Cart::create([
-                'code_cart' => Str::uuid(),
-                'user_email' => $userEmail,
-                'code_product' => $code_product,
-                'quantity' => $quantity,
-                'subtotal' => $subtotal,
-            ]);
-        }
-
-        // Kurangi stok
-        $stock->stock -= $quantity;
-        $stock->save();
-
-        $cartCount = Cart::where('user_email', $userEmail)->count();
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'message' => 'Produk berhasil ditambahkan ke keranjang.',
-                'cartCount' => $cartCount,
-            ]);
-        }
-
-        return redirect()->route('cart')->with('success', 'Produk ditambahkan ke keranjang.');
     }
 
     // Tampilkan isi keranjang
@@ -85,7 +29,7 @@ class CartController extends Controller
         return view('pages.pembeli.cart', ['cart' => $cartItems]);
     }
 
-    // Update jumlah produk di keranjang
+        // Update jumlah produk di keranjang
     public function updateCart(Request $request, $code_product)
     {
         $userEmail = Auth::user()->email;
@@ -149,5 +93,59 @@ class CartController extends Controller
         return redirect()->route('cart')->with('success', 'Produk dihapus dari keranjang.');
     }
 
-}
+    // Tambah produk ke keranjang
+    public function addToCart(Request $request, $code_product)
+    {
+        $product = Product::where('code_product', $code_product)->first();
 
+        if (!$product) {
+            return $request->wantsJson()
+                ? response()->json(['message' => 'Produk tidak ditemukan.'], 404)
+                : redirect()->back()->with('error', 'Produk tidak ditemukan.');
+        }
+
+        $quantity = max((int) $request->input('quantity', 1), 1);
+
+        $stock = $product->stock;
+
+        if (!$stock || $stock->stock < $quantity) {
+            return redirect()->back()->with('error', 'Stok produk tidak mencukupi.');
+        }
+
+        $userEmail = Auth::user()->email;
+        $subtotal = $product->price * $quantity;
+
+        $existing = Cart::where('code_product', $code_product)
+            ->where('user_email', $userEmail)
+            ->first();
+
+        if ($existing) {
+            $existing->quantity += $quantity;
+            $existing->subtotal = $existing->quantity * $product->price;
+            $existing->save();
+        } else {
+            Cart::create([
+                'code_cart' => Str::uuid(),
+                'user_email' => $userEmail,
+                'code_product' => $code_product,
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
+            ]);
+        }
+
+        // Kurangi stok
+        $stock->stock -= $quantity;
+        $stock->save();
+
+        $cartCount = Cart::where('user_email', $userEmail)->count();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Produk berhasil ditambahkan ke keranjang.',
+                'cartCount' => $cartCount,
+            ]);
+        }
+
+        return redirect()->route('cart')->with('success', 'Produk ditambahkan ke keranjang.');
+    }
+}

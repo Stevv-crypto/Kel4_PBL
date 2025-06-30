@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Product;
-use Carbon\Carbon;
+use App\Models\OrderItem;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
@@ -21,6 +22,7 @@ class CheckoutController extends Controller
 
         // Redirect jika data user belum lengkap
         if (!$user->address || !$user->phone) {
+            session(['redirect_after_profile' => route('checkout.show')]);
             return redirect()->route('profile')->with('error', 'Lengkapi profil Anda sebelum checkout.');
         }
 
@@ -79,12 +81,9 @@ class CheckoutController extends Controller
         $orderCode = 'ORD-' . strtoupper(Str::random(10));
 
         // Simpan file bukti pembayaran
-        //$file = $request->file('payment_proof');
-        //$fileName = time() . '_' . $file->getClientOriginalName();
-        //$filePath = $file->storeAs('public/payment_proofs', $fileName);
-        // Simpan bukti pembayaran
-        $imagePath = $request->file('payment_proof')->store('payment_proofs', 'public');
-
+        $file = $request->file('payment_proof');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('public/payment_proofs', $fileName);
 
         // Simpan order ke tabel `orders`
         $order = Order::create([
@@ -93,10 +92,8 @@ class CheckoutController extends Controller
             'payment_id' => $request->payment_method,
             'total_price' => $total,
             'status' => 'waiting',
-            //'payment_proof' => 'payment_proofs/' . $fileName,
-            'payment_proof' => $imagePath,
+            'payment_proof' => 'payment_proofs/' . $fileName,
         ]);
-
 
         // Simpan item pesanan ke tabel `order_items`
         foreach ($cartItems as $item) {
@@ -111,8 +108,9 @@ class CheckoutController extends Controller
 
         // Hapus item yang sudah diorder dari keranjang (bukan semua!)
         Cart::whereIn('code_cart', $selectedItems)->delete();
-        return redirect()->route('invoice.show', ['order_code' => $order->order_code]);
 
+        return redirect()->route('home_page')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
     }
-    
+
+
 }

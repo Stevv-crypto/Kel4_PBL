@@ -37,7 +37,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('inbox') }}"
+                <a href="{{ route('chat-users') }}"
                    class="flex items-center p-3 rounded-lg {{ request()->routeIs('inbox') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                     <i class="fas fa-inbox mr-3"></i> Inbox
                 </a>
@@ -78,7 +78,7 @@
             <h3 class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2 ml-2">Management</h3>
             <ul class="space-y-2">
                 <li>
-                    <a href="{{ route('sales.report') }}"
+                    <a href="{{ route('sales') }}"
                        class="flex items-center p-3 rounded-lg {{ request()->routeIs('sales') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
                         <i class="fas fa-chart-line mr-3"></i> Sales Report
                     </a>

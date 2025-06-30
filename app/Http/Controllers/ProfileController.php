@@ -28,7 +28,9 @@ class ProfileController extends Controller
         $user->address = $validated['address'];
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+        $redirectTo = session('redirect_after_profile', route('profile'));
+        session()->forget('redirect_after_profile');
+
+        return redirect($redirectTo)->with('success', 'Profil Anda berhasil diperbarui. Silakan lanjutkan proses belanja Anda.');
     }
 }
-

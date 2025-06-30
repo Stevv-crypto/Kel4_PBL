@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Session;
 
-
 class AuthController extends Controller
 {
     // Tampilkan halaman register
@@ -31,6 +30,8 @@ class AuthController extends Controller
         if ($email) {
             return back()->with('failed', 'Email sudah terdaftar');
         }
+
+        
 
         $request['status'] = 'verify';
         $user = User::create($request->all());
