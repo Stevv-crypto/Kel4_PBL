@@ -12,7 +12,7 @@
         <!-- Desktop Menu -->
         <nav class="menu hidden md:flex gap-8 items-center">
             <a href="{{ route('home_page') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Home</a>
-            <a href="{{ route('contact') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
+            <a href="{{ route('chat.index') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">Contact</a>
             <a href="{{ route('about') }}" class="text-black text-base hover:text-gray-700 hover:underline font-medium">About</a>
 
             <!-- Dropdown Categories -->
@@ -85,7 +85,7 @@
         class="hidden flex flex-col gap-4 bg-[#b0cee3] px-6 py-4 md:hidden border-t border-gray-300">
 
         <a href="{{ route('home_page') }}" class="text-black text-base font-medium">Home</a>
-        <a href="{{ route('contact') }}" class="text-black text-base font-medium">Contact</a>
+        <a href="{{ route('chat.index') }}" class="text-black text-base font-medium">Contact</a>
         <a href="{{ route('about') }}" class="text-black text-base font-medium">About</a>
 
         <!-- Mobile Categories Dropdown -->
@@ -132,7 +132,7 @@
             </a>
         </div>
         <div class="option px-4 py-3 hover:bg-gray-100">
-            <a href="{{ route('order.list') }}" class="flex items-center gap-3 text-gray-800 text-sm">
+            <a href="orderList" class="flex items-center gap-3 text-gray-800 text-sm">
                 <i class='bx bxl-shopify'></i> <span>My Order</span>
             </a>
         </div>
