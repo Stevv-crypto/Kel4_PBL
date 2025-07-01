@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = User::create($request->all());
         Auth::login($user);
 
-        return redirect()->route('home_page');
+        return redirect()->route('verify');
     }
 
     // Tampilkan halaman login

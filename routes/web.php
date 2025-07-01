@@ -2,7 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Namespace Pembeli
+/*
+/-----------------------------------------------------------
+/ NAMESPACE PEMBELI
+/-----------------------------------------------------------
+*/
+
 use App\Livewire\Chat\Index;
 use App\Livewire\Chat\Chat;
 use App\Livewire\ChatUsers;
@@ -11,6 +16,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
@@ -20,7 +26,12 @@ use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\VerificationController;
 
-// Namespace Penjual
+/*
+/---------------------------------------------------------------
+/ NAMESPACE PENJUAL
+/---------------------------------------------------------------
+*/
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\productController;
 use App\Http\Controllers\ProductAdminController;
@@ -39,40 +50,40 @@ Route::get('/', function () {
     return view('landing');
 });
 
-Route::get('/forget_password1', function() {
-    return view('pages/pembeli/forget_password1');
-});
+/*
+/------------------------------------------------------------------
+/ AUTHENTICATION ROUTE
+/------------------------------------------------------------------
+/ Semua route terkait register, login, dan logout
+*/
 
-Route::get('/forgot_password2', function() {
-    return view('pages/pembeli/forgot_password2');
-});
-
-// Register
+// =========================== Route untuk register ======================================
 Route::get('/register', [AuthController::class, 'tampilRegister'])->name('tampilRegister');
 Route::post('/register', [AuthController::class, 'dataRegister'])->name('dataRegister');
 
-// Login
+// ========================= Route untuk login ================================
 Route::get('/login', [AuthController::class, 'tampilLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'dataLogin'])->name('dataLogin');
 
-// Logout
+// ==================== Route untuk logout =============================
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => ['auth']], function() {
-    // Chat
-    Route::get('/chat', Index::class)->name('chat.index');
-    Route::get('/chat-users', ChatUsers::class)->name('chat-users');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
-});
+/*
+/-----------------------------------------------------------------------------------
+/ ROUTE UNTUK VERIFIKASI EMAIL
+/-----------------------------------------------------------------------------------
+/ Route yang berfungsi untuk verifikasi email dahulu ketika mau masuk ke home page setelah
+/ registrasi dan ketika mau mengakses forgot password
+*/
 
-// Forgot password dengan verifikasi email
+// ==================== Forgot password dengan verifikasi email ======================================
 Route::prefix('reset')->group(function() {
     Route::post('/verify', [VerificationController::class, 'store'])->name('reset.send_otp');
     Route::get('/verify/{unique_id}', [VerificationController::class, 'show'])->name('reset.show_otp');
     Route::put('/verify/{unique_id}', [VerificationController::class, 'update'])->name('reset.update');
 });
 
-// Register dengan verifikasi email
+// ====================== Register dengan verifikasi email ============================================
 Route::group(['middleware' => ['auth', 'check_role:pembeli']], function() {
     Route::get('/verify', [VerificationController::class, 'index'])->name('verify');
     Route::post('/verify', [VerificationController::class, 'store'])->name('verify.send_otp');
@@ -80,24 +91,46 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli']], function() {
     Route::put('/verify/{unique_id}', [VerificationController::class, 'update'])->name('verify.update');
 });
 
-// Forgot Password
+/*
+/------------------------------------------------------------------------------------------------------
+/ ROUTE YANG DAPAT DIAKSES TANPA PERLU LOGIN
+/-------------------------------------------------------------------------------------------------------
+*/
+
+// ================================== Forgot Password ===================================================
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
 
-// Reset Password
+// ============================= Reset Password ================================================
 Route::get('/reset-password', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
-// Home Page
+// =============================== Home Page ========================================
 Route::get('/home_page', [ProductController::class, 'tampilHome'])->name('home_page');
 
+// ================================== Detail Produk ============================================
 Route::get('/product/{code_product}', [ProductController::class, 'show'])->name('product.show');
 
+// ============================ About =================================
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 
+// ================================= Kategori ===========================================
 Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
 
-//search
+// ========================== Search Engine ================================
 Route::get('/search', [productController::class, 'search'])->name('search');
+
+/*
+/----------------------------------------------------------------------------------
+/ ROUTE YANG DAPAT DIAKSES KETIKA PENGGUNA SUDAH LOGIN
+/--------------------------------------------------------------------------------
+*/
+// =========== Aut ====
+Route::group(['middleware' => ['auth']], function() {
+    // Chat
+    Route::get('/chat', Index::class)->name('chat.index');
+    Route::get('/chat-users', ChatUsers::class)->name('chat-users');
+    Route::get('/chat/{query}', Chat::class)->name('chat');
+});
 
 // Pengelompokan route dengan middleware
 Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
@@ -137,6 +170,10 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::patch('/category/{code}/status', [CategoryController::class, 'updateStatus'])->name('category.updateStatus');
     Route::delete('/category/{code}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/category/{code}', [CategoryController::class, 'show'])->name('category.show');
+
+    // Order list
+    Route::get('/orderList', [OrderListController::class, 'index'])->name('order.list');
+    Route::get('/order/invoice/{order_code}', [OrderListController::class, 'invoice'])->name('order.invoice');
 });
 
 // Admin route
@@ -182,6 +219,12 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::get('/stock/{category}/{merk}', [StockController::class, 'showByMerk'])->name('product_stock');
     Route::put('/stock/update/{id}', [StockController::class, 'updateSingle'])->name('stock.updateSingle');
     Route::delete('/manage_product/{code_product}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
+
+    //order
+    Route::get('/order', [OrderController::class, 'index'])->name('order');
+    Route::post('/order/{order}/confirm', [OrderController::class, 'confirm'])->name('order.confirm');
+    Route::post('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
+    Route::post('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 
     //Invoice
     Route::post('/invoice', [InvoiceController::class, 'invoice'])->name('invoice');

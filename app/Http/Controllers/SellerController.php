@@ -125,7 +125,11 @@ class SellerController extends Controller
 
     public function destroy($code_product)
     {
-        $product = Product::findOrFail($code_product);
+        $product = Product::withCount('orderItems')->findOrFail($code_product);
+
+        if($product->order_items_count > 0) {
+            return redirect()->route('manage_product.index')->with('error', 'Tidak bisa menghapus produk karena ada yang sedang bertransaksi');
+        }
 
         DB::transaction(function () use ($product) {
             Stock::where('code_product', $product->code_product)->delete();
