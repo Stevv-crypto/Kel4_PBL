@@ -37,7 +37,6 @@ use App\Http\Controllers\productController;
 use App\Http\Controllers\ProductAdminController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\TimController;
 use App\Http\Controllers\StockController;
@@ -45,6 +44,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MerkController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\SalesReportController;
 
 Route::get('/', function () {
     return view('landing');
@@ -185,7 +185,6 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     
     Route::get('/order', [OrderController::class, 'order'])->name('order');
     
-    Route::get('/sales', [SalesController::class, 'sales'])->name('sales');
 
     //manageproduct
     Route::get('manage_product', [SellerController::class, 'index'])->name('manage_product.index');
@@ -232,4 +231,6 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
+
+    Route::get('/admin/sales-report', [SalesReportController::class, 'index'])->name('sales.report');
 });
