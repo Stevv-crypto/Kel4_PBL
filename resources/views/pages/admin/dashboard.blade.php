@@ -11,7 +11,7 @@
         <div class="flex justify-between">
             <div>
                 <p class="text-sm text-gray-600">Total User</p>
-                <h3 class="text-2xl font-bold text-gray-800">40,689</h3>
+                <h3 class="text-2xl font-bold text-gray-800">{{ number_format($totalUsers) }}</h3>
             </div>
             <div class="p-3 bg-blue-300 rounded-lg">
                 <i class="fas fa-users text-blue-600"></i>
@@ -23,7 +23,7 @@
         <div class="flex justify-between">
             <div>
                 <p class="text-sm text-gray-600">Total Order</p>
-                <h3 class="text-2xl font-bold text-gray-800">10293</h3>
+                <h3 class="text-2xl font-bold text-gray-800">{{ number_format($totalOrders) }}</h3>
             </div>
             <div class="p-3 bg-yellow-200 rounded-lg">
                 <i class="fas fa-shopping-bag text-yellow-600"></i>
@@ -35,7 +35,7 @@
         <div class="flex justify-between">
             <div>
                 <p class="text-sm text-gray-600">Total Sales</p>
-                <h3 class="text-2xl font-bold text-gray-800">$89,000</h3>
+                <h3 class="text-2xl font-bold text-gray-800">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
             </div>
             <div class="p-3 bg-green-200 rounded-lg">
                 <i class="fas fa-dollar-sign text-green-600"></i>
@@ -54,6 +54,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('salesChart').getContext('2d');
