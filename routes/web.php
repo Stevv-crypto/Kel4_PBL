@@ -19,7 +19,6 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\NewPasswordController;
@@ -134,9 +133,6 @@ Route::group(['middleware' => ['auth']], function() {
 
 // Pengelompokan route dengan middleware
 Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], function() {
-
-    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-    Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
     Route::get('/detail_product', [DetailproductController::class, 'detail'])->name('detail_product');
     Route::get('/productAdmin', [ProductAdminController::class, 'tampilProduk'])->name('produkAdmin');
     Route::get('/category', [ProductController::class, 'tampilKategori'])->name('category');

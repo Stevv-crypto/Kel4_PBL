@@ -16,7 +16,7 @@
             <a href="{{ route('home_page') }}" class="nav-link text-gray-800 text-base hover:text-white font-medium px-4 py-2 rounded-xl transition-all duration-300 hover:bg-white/20 hover:shadow-lg transform hover:-translate-y-0.5">
                 Home
             </a>
-            <a href="{{ route('contact') }}" class="nav-link text-gray-800 text-base hover:text-white font-medium px-4 py-2 rounded-xl transition-all duration-300 hover:bg-white/20 hover:shadow-lg transform hover:-translate-y-0.5">
+            <a href="{{ route('chat.index') }}" class="nav-link text-gray-800 text-base hover:text-white font-medium px-4 py-2 rounded-xl transition-all duration-300 hover:bg-white/20 hover:shadow-lg transform hover:-translate-y-0.5">
                 Contact
             </a>
             <a href="{{ route('about') }}" class="nav-link text-gray-800 text-base hover:text-white font-medium px-4 py-2 rounded-xl transition-all duration-300 hover:bg-white/20 hover:shadow-lg transform hover:-translate-y-0.5">
@@ -107,7 +107,7 @@
             <a href="{{ route('home_page') }}" class="block text-gray-800 text-base font-medium py-3 px-4 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 transform hover:translate-x-2">
                 <i class='bx bx-home mr-3'></i>Home
             </a>
-            <a href="{{ route('contact') }}" class="block text-gray-800 text-base font-medium py-3 px-4 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 transform hover:translate-x-2">
+            <a href="{{ route('chat.index') }}" class="block text-gray-800 text-base font-medium py-3 px-4 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 transform hover:translate-x-2">
                 <i class='bx bx-envelope mr-3'></i>Contact
             </a>
             <a href="{{ route('about') }}" class="block text-gray-800 text-base font-medium py-3 px-4 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-300 transform hover:translate-x-2">

@@ -137,7 +137,7 @@
                 
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('home_page') }}" class="text-black text-base font-medium">Home</a>
-                    <a href="{{ route('contact') }}" class="text-black text-base font-medium">Contact</a>
+                    <a href="{{ route('chat.index') }}" class="text-black text-base font-medium">Contact</a>
                     <a href="{{ route('about') }}" class="text-black text-base font-medium">About</a>
                 </div>
                 
