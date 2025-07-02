@@ -18,13 +18,12 @@ class OrderListController extends Controller
     }
 
     public function invoice($order_code)
-{
-    $order = Order::with(['user', 'payment'])->where('order_code', $order_code)->firstOrFail();
-    $invoiceProducts = $order->orderItems()->with('product')->get();
+    {
+        $order = Order::with(['user', 'payment'])->where('order_code', $order_code)->firstOrFail();
+        $invoiceProducts = $order->orderItems()->with('product')->get();
 
-    $subTotal = $invoiceProducts->sum('subtotal');
+        $subTotal = $invoiceProducts->sum('subtotal');
 
-    return view('pages.pembeli.invoice', compact('order', 'invoiceProducts', 'subTotal'));
-}
-
+        return view('pages.pembeli.invoice', compact('order', 'invoiceProducts', 'subTotal'));
+    }
 }

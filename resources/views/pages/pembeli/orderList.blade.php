@@ -9,7 +9,7 @@
   <div class="w-full md:w-1/3 flex flex-col justify-start items-start gap-8 px-4 md:px-6">
     <!-- Breadcrumb -->
     <div class="flex items-center gap-3">
-      <a href="{{ url('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
+      <a href="{{ route('home_page') }}" class="text-black hover:underline opacity-50">Home</a>
       <div class="h-4 border-l border-gray-500 opacity-70 rotate-45"></div>
       <a href="{{ route('profile') }}" class="text-black hover:underline">My Account</a>
     </div>
@@ -50,7 +50,7 @@
               <ul class="space-y-2">
                 @foreach($order->orderItems as $item)
                 <li class="flex items-center gap-2">
-                  <img src="{{ asset($item->product->image ?? 'placeholder.png') }}" alt="{{ $item->product->name }}" class="w-10 h-10 object-cover rounded">
+                  <img src="{{ asset('storage/'. $item->product->image ?? 'placeholder.png') }}" alt="{{ $item->product->name }}" class="w-10 h-10 object-cover rounded">
                   <div>
                     <div>{{ $item->product->name ?? 'N/A' }}</div>
                     <div class="text-xs text-gray-500">x{{ $item->quantity }}</div>
