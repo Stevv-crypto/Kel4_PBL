@@ -4,45 +4,51 @@
 
 @section('content')
 
-    <section class="flex max-md:flex-col max-lg:flex-row items-center justify-center min-h-screen">
-        <!-- Gambar Produk -->
-        <div class="w-3/5 lg:flex justify-center mb-10 md:hidden">
-            <img src="/image/produk.png" alt="Electronics" class="w-full max-w-md lg:max-w-xl object-contain">
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 px-4 py-8">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex overflow-hidden animate__animated animate__fadeInUp">
+        <!-- Left Image -->
+        <div class="hidden lg:flex items-center justify-center w-1/2 bg-blue-200">
+            <img src="/image/produk.png" alt="Electronics" class="object-contain w-4/5 animate__animated animate__fadeInLeft">
         </div>
 
-        <!-- Form Lupa Password -->
-        <div class="w-2/5 bg-[#ACC8DD] px-8 py-[150px] rounded-xl shadow-md">
-            <h2 class="text-2xl font-semibold text-center -mt-12">Forgot Password</h2>
-            <p class="text-sm text-center mt-4 text-gray-700">Enter your email</p>
+        <!-- Forgot Password Form -->
+        <div class="w-full lg:w-1/2 p-10 relative bg-[#fefefe]">
+            <h2 class="text-3xl font-bold text-blue-600 text-center mb-2 animate__animated animate__fadeInDown">Forgot Password</h2>
+            <p class="text-sm text-gray-500 text-center mb-6">Enter your email to reset your password</p>
 
             @if (session('failed'))
-                <div class="text-red-700 mt-10 text-center">{{ session('failed') }}</div>
+                <div class="text-red-700 text-center mb-4 font-medium">{{ session('failed') }}</div>
+            @endif
+            @if (session('status'))
+                <div class="text-green-700 text-center mb-4 font-medium">{{ session('status') }}</div>
             @endif
 
-            <form method="post" action="/reset/verify" class="space-y-8 mt-12">
+            <form method="POST" action="/reset/verify" class="space-y-6 animate__animated animate__fadeInUp">
                 @csrf
-                <input type="hidden" value="reset_password" name="type">
+                <input type="hidden" name="type" value="reset_password">
 
-                <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}" class="w-full py-2 px-3 bg-transparent border border-gray-300 rounded-md 
-                           focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 placeholder-gray-500">
-
-                @if (session('status'))
-                    <div class="text-green-600" {!! session('status') !!}</div>
-                @endif
-
-
+                <div class="relative">
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="Email"
+                        class="w-full py-3 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-sm" required>
+                    <i class='bx bx-envelope absolute right-4 top-1/2 -translate-y-1/2 text-gray-500'></i>
+                </div>
                 @error('email')
-                    <p class="text-red-600 text-sm">{{ $message }}</p>
+                    <small class="text-red-700">{{ $message }}</small>
                 @enderror
 
-                <div class="flex justify-between space-x-4 items-center w-full">
-                    <button type="submit"
-                        class="bg-[#70B9EA] text-white py-3 px-5 w-32 rounded-md text-center text-sm hover:bg-blue-600 transition-colors">
+                <div class="flex justify-center">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-6 py-3 rounded-lg shadow-md font-semibold text-sm">
                         Continue
                     </button>
                 </div>
             </form>
-        </div>
-    </section>
 
+            <p class="text-sm text-gray-600 mt-6 text-center">Back to
+                <a href="{{ route('login') }}" class="text-blue-600 hover:underline font-medium">Login</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 @endsection

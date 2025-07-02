@@ -11,89 +11,89 @@ input::-webkit-credentials-auto-fill-button,
 input::-webkit-clear-button {
     display: none !important;
 }
-
-input[type="password"]::-ms-reveal {
-    display: none;
-}
-
-input[type="password"]::-webkit-textfield-decoration-container {
-    display: none;
-}
 </style>
 
-<section class="flex max-md:flex-col max-lg:flex-row items-center justify-center min-h-screen">
-    <!-- Gambar Produk -->
-    <div class="w-3/5 lg:flex justify-center mb-10 md:hidden">
-        <img src="/image/produk.png" alt="Electronics" class="w-full max-w-md lg:max-w-xl object-contain">
-    </div>
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 px-4 py-8">
+    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex overflow-hidden animate__animated animate__fadeInUp">
+        <!-- Left Image -->
+        <div class="hidden lg:flex items-center justify-center w-1/2 bg-blue-200">
+            <img src="/image/produk.png" alt="Electronics" class="object-contain w-4/5 animate__animated animate__fadeInLeft">
+        </div>
 
-    <!-- Form Reset Password -->
-    <div class="w-2/5 bg-[#ACC8DD] px-8 py-[150px] rounded-xl shadow-md">
-        <h2 class="text-2xl font-semibold text-center -mt-12">Reset Password</h2>
-        <p class="text-sm text-center mt-4 text-gray-700">Enter a new password</p>
+        <!-- Reset Form -->
+        <div class="w-full lg:w-1/2 p-10 relative bg-[#fefefe]">
+            <h2 class="text-3xl font-bold text-blue-600 text-center mb-2 animate__animated animate__fadeInDown">Reset Password</h2>
+            <p class="text-sm text-gray-500 text-center mb-6">Enter your new password</p>
 
-        @if(session('success'))
-            <p class="text-green-600 text-sm text-center">{{ session('status') }}</p>
-        @endif
+            @if(session('success'))
+                <p class="text-green-600 text-sm text-center">{{ session('success') }}</p>
+            @endif
 
-        <form method="POST" action="{{ route('password.update') }}" class="space-y-8 mt-12">
-            @csrf
-            <input type="hidden" name="email" value="{{ $email }}">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-6 animate__animated animate__fadeInUp">
+                @csrf
+                <input type="hidden" name="email" value="{{ $email }}">
 
-            <div class="relative">
-                <input id="password" type="password" name="password" placeholder="Masukkan Password" class="form-control w-full py-2 px-3 bg-transparent border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 placeholder-gray-500">
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 cursor- show-password text-gray-500">
-                    <i id="password-lock" class="bx bx-lock text-gray-500"></i>
-                </span>
-            </div>
-            @error('password')
-                <p class="text-red-600 text-sm">{{ $message }}</p>
-            @enderror
+                <!-- New Password -->
+                <div class="relative">
+                    <input id="password" type="password" name="password" placeholder="New Password"
+                        class="w-full py-3 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-sm">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer show-password text-gray-500">
+                        <i id="password-lock" class="bx bx-lock"></i>
+                    </span>
+                </div>
+                @error('password')
+                    <small class="text-red-700">{{ $message }}</small>
+                @enderror
 
-            <div class="relative">
-                <input id="confirm-password" type="password" name="password_confirmation" placeholder="Konfirmasi Password" class="form-control w-full py-2 px-3 bg-transparent border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 placeholder-gray-500">
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 cursor- show-confirm-password text-gray-500">
-                    <i id="password-lock" class="bx bx-lock text-gray-500"></i>
-                </span>
-            </div>
-            @error('confirm-password')
-                <small class="text-red-700">{{ $message }}</small>
-            @enderror
+                <!-- Confirm Password -->
+                <div class="relative">
+                    <input id="confirm-password" type="password" name="password_confirmation" placeholder="Confirm Password"
+                        class="w-full py-3 px-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-sm">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer show-confirm-password text-gray-500">
+                        <i id="confirm-password-lock" class="bx bx-lock"></i>
+                    </span>
+                </div>
+                @error('password_confirmation')
+                    <small class="text-red-700">{{ $message }}</small>
+                @enderror
 
-            <div class="flex justify-between space-x-4 items-center w-full">
-                <button type="submit"
-                    class="bg-[#70B9EA] text-white py-3 px-5 w-32 rounded-md text-center text-sm hover:bg-blue-600 transition-colors">
-                    Continue
-                </button>
-            </div>
-        </form>
+                <div class="flex justify-center">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 transition-colors text-white px-6 py-3 rounded-lg shadow-md font-semibold text-sm">
+                        Continue
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.show-password').on('click', function() {
-            if($('#password').attr('type') === 'password') {
-                $('#password').attr('type', 'text');
-                $('#password-lock').attr('class', 'bx bx-lock-open');
-            } else{
-                $('#password').attr('type', 'password');
-                $('#password-lock').attr('class', 'bx bx-lock');
+    $(function () {
+        $('.show-password').on('click', function () {
+            const input = $('#password');
+            const icon = $('#password-lock');
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('bx-lock').addClass('bx-lock-open');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('bx-lock-open').addClass('bx-lock');
             }
-        })
-    });
+        });
 
-    $(document).ready(function() {
-        $('.show-confirm-password').on('click', function() {
-            if($('#confirm-password').attr('type') === 'password') {
-                $('#confirm-password').attr('type', 'text');
-                $('#password-lock').attr('class', 'bx bx-lock-open');
-            } else{
-                $('#confirm-password').attr('type', 'password');
-                $('#password-lock').attr('class', 'bx bx-lock');
+        $('.show-confirm-password').on('click', function () {
+            const input = $('#confirm-password');
+            const icon = $('#confirm-password-lock');
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('bx-lock').addClass('bx-lock-open');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('bx-lock-open').addClass('bx-lock');
             }
-        })
+        });
     });
 </script>
 
