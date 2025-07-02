@@ -13,10 +13,7 @@ class SellerController extends Controller
 {
     public function index()
     {
-        // Produk dengan eager loading relasi lengkap
         $products = Product::with(['category', 'merk', 'stock'])->get();
-
-        // Ambil kategori dan merk yang statusnya ON saja
         $categories = Category::where('status', 'ON')->get();
         $merks = Merk::where('status', 'ON')->get();
 
@@ -25,19 +22,11 @@ class SellerController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'code_product' => 'required|string|max:255|unique:products,code_product',
             'name' => 'required|string|max:255',
-            'category' => ['required', 'string', 'exists:categories,code', function ($attribute, $value, $fail) {
-                if (!Category::where('code', $value)->where('status', 'ON')->exists()) {
-                    $fail('The selected category is not available.');
-                }
-            }],
-            'merk' => ['required', 'string', 'exists:merks,code', function ($attribute, $value, $fail) {
-                if (!Merk::where('code', $value)->where('status', 'ON')->exists()) {
-                    $fail('The selected merk is not available.');
-                }
-            }],
+            'category' => ['required', 'exists:categories,code', fn($a, $v, $f) => Category::where('code', $v)->where('status', 'ON')->exists() ?: $f('Kategori tidak tersedia.')],
+            'merk' => ['required', 'exists:merks,code', fn($a, $v, $f) => Merk::where('code', $v)->where('status', 'ON')->exists() ?: $f('Merk tidak tersedia.')],
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'warranty' => 'nullable|string',
@@ -45,26 +34,22 @@ class SellerController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads', 'public');
-            $validatedData['image'] = $imagePath;
+            $data['image'] = $request->file('image')->store('uploads', 'public');
         }
 
-        DB::transaction(function () use ($validatedData) {
-            $product = Product::create([
-                'code_product' => $validatedData['code_product'],
-                'name' => $validatedData['name'],
-                'category_code' => $validatedData['category'],
-                'merk_code' => $validatedData['merk'],
-                'description' => $validatedData['description'] ?? null,
-                'price' => $validatedData['price'],
-                'warranty' => $validatedData['warranty'] ?? null,
-                'image' => $validatedData['image'] ?? null,
+        DB::transaction(function () use ($data) {
+            Product::create([
+                'code_product' => $data['code_product'],
+                'name' => $data['name'],
+                'category_code' => $data['category'],
+                'merk_code' => $data['merk'],
+                'description' => $data['description'] ?? null,
+                'price' => $data['price'],
+                'warranty' => $data['warranty'] ?? null,
+                'image' => $data['image'] ?? null,
             ]);
 
-            Stock::create([
-                'code_product' => $product->code_product,
-                'quantity' => 0,
-            ]);
+            Stock::create(['code_product' => $data['code_product'], 'quantity' => 0]);
         });
 
         return redirect()->route('manage_product.index')->with('success', 'Product added with initial stock 0!');
@@ -74,19 +59,11 @@ class SellerController extends Controller
     {
         $product = Product::findOrFail($code_product);
 
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'code_product' => "required|string|max:255|unique:products,code_product,{$code_product},code_product",
             'name' => 'required|string|max:255',
-            'category' => ['required', 'string', 'exists:categories,code', function ($attribute, $value, $fail) {
-                if (!Category::where('code', $value)->where('status', 'ON')->exists()) {
-                    $fail('The selected category is not available.');
-                }
-            }],
-            'merk' => ['required', 'string', 'exists:merks,code', function ($attribute, $value, $fail) {
-                if (!Merk::where('code', $value)->where('status', 'ON')->exists()) {
-                    $fail('The selected merk is not available.');
-                }
-            }],
+            'category' => ['required', 'exists:categories,code', fn($a, $v, $f) => Category::where('code', $v)->where('status', 'ON')->exists() ?: $f('Kategori tidak tersedia.')],
+            'merk' => ['required', 'exists:merks,code', fn($a, $v, $f) => Merk::where('code', $v)->where('status', 'ON')->exists() ?: $f('Merk tidak tersedia.')],
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'warranty' => 'nullable|string',
@@ -94,29 +71,25 @@ class SellerController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads', 'public');
-            $validatedData['image'] = 'storage/' . $imagePath;
+            $data['image'] = 'storage/' . $request->file('image')->store('uploads', 'public');
         }
 
-        DB::transaction(function () use ($product, $validatedData) {
+        DB::transaction(function () use ($product, $data) {
             $oldCode = $product->code_product;
 
             $product->update([
-                'code_product' => $validatedData['code_product'],
-                'name' => $validatedData['name'],
-                'category_code' => $validatedData['category'],
-                'merk_code' => $validatedData['merk'],
-                'description' => $validatedData['description'] ?? null,
-                'price' => $validatedData['price'],
-                'warranty' => $validatedData['warranty'] ?? null,
-                'image' => $validatedData['image'] ?? $product->image,
+                'code_product' => $data['code_product'],
+                'name' => $data['name'],
+                'category_code' => $data['category'],
+                'merk_code' => $data['merk'],
+                'description' => $data['description'] ?? null,
+                'price' => $data['price'],
+                'warranty' => $data['warranty'] ?? null,
+                'image' => $data['image'] ?? $product->image,
             ]);
 
-            if ($oldCode !== $validatedData['code_product']) {
-                $stock = Stock::where('code_product', $oldCode)->first();
-                if ($stock) {
-                    $stock->update(['code_product' => $validatedData['code_product']]);
-                }
+            if ($oldCode !== $data['code_product']) {
+                Stock::where('code_product', $oldCode)->update(['code_product' => $data['code_product']]);
             }
         });
 
@@ -127,8 +100,8 @@ class SellerController extends Controller
     {
         $product = Product::withCount('orderItems')->findOrFail($code_product);
 
-        if($product->order_items_count > 0) {
-            return redirect()->route('manage_product.index')->with('error', 'Tidak bisa menghapus produk karena ada yang sedang bertransaksi');
+        if ($product->order_items_count > 0) {
+            return redirect()->route('manage_product.index')->with('error', 'Tidak bisa menghapus produk karena ada transaksi.');
         }
 
         DB::transaction(function () use ($product) {
