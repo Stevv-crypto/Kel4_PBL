@@ -186,7 +186,19 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::get('manage_product', [SellerController::class, 'index'])->name('manage_product.index');
     Route::post('manage_product', [SellerController::class, 'store'])->name('manage_product.store');
     Route::put('/admin/manage_product/{code_product}', [SellerController::class, 'update'])->name('manage_product.update');
-    Route::delete('/manage_product/{code_product}', [ProductController::class, 'destroy'])->name('manage_product.delete');
+    Route::delete('/manage_product/{code_product}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
+    Route::put('/admin/stock/{code_product}', [SellerController::class, 'updateStock'])->name('stock.update');
+    // Brand routes
+    Route::post('/admin/brand', [SellerController::class, 'storeMerk'])->name('brand.store');
+    Route::put('/admin/brand/{code}', [SellerController::class, 'updateMerk'])->name('brand.update');
+    Route::delete('/admin/brand/{code}', [SellerController::class, 'destroyMerk'])->name('brand.destroy');
+    // Category CRUD
+    Route::post('/admin/category', [SellerController::class, 'storeCategory'])->name('category.store');
+    Route::put('/admin/category/{code}', [SellerController::class, 'updateCategory'])->name('category.update');
+    Route::delete('/admin/category/{code}', [SellerController::class, 'destroyCategory'])->name('category.destroy');
+
+
+
 
     //setting
     Route::get('/admin/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
@@ -205,15 +217,6 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
     Route::delete('admin/merk/{merk}', [MerkController::class, 'destroy'])->name('merk.destroy');
     Route::patch('admin/merk/{merk}/status', [MerkController::class, 'updateStatus'])->name('merk.updateStatus');
     });
-
-    //stock
-    Route::get('/admin/manage_stock', [StockController::class, 'index'])->name('manage_stock');
-    Route::get('/admin/manage_stock/{code_product}', [StockController::class, 'show'])->name('manage_stock.show');
-    Route::get('/admin/manage_stock', [StockController::class, 'index'])->name('manage_stock');
-    Route::get('/admin/manage_stock/{category}', [StockController::class, 'show'])->name('stock_detail');
-    Route::get('/stock/{category}/{merk}', [StockController::class, 'showByMerk'])->name('product_stock');
-    Route::put('/stock/update/{id}', [StockController::class, 'updateSingle'])->name('stock.updateSingle');
-    Route::delete('/manage_product/{code_product}', [SellerController::class, 'destroy'])->name('manage_product.destroy');
 
     //order
     Route::get('/order', [OrderController::class, 'index'])->name('order');

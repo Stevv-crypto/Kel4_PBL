@@ -14,4 +14,10 @@ class Merk extends Model
     protected $keyType = 'string';
 
     protected $fillable = ['code', 'name', 'logo', 'status'];
+
+    public function products()
+{
+    return $this->hasMany(Product::class, 'merk_code', 'code');
+}
+
 }

@@ -36,7 +36,7 @@
                         <input type="checkbox" class="item-checkbox" value="{{ $item->code_cart }}" data-subtotal="{{ $item->subtotal }}">
                     </td>
                     <td class="py-4 px-4 flex items-center">
-                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-10 h-10 mr-3 rounded shadow">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-10 h-10 mr-3 rounded shadow">
                         {{ $product->name }}
                     </td>
                     <td class="py-4 px-4">Rp {{ number_format($product->price, 2, ',', '.') }}</td>

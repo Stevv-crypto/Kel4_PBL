@@ -13,4 +13,10 @@ class Category extends Model
     protected $keyType = 'string';   // tipe primary key string
 
     protected $fillable = ['code', 'name', 'status'];
+
+    public function products()
+{
+    return $this->hasMany(Product::class, 'category_code', 'code');
+}
+
 }

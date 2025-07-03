@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
@@ -29,7 +30,6 @@ class CategoryController extends Controller
         Category::create([
             'code' => $request->code,
             'name' => $request->name,
-            'status' => $request->has('status') && $request->status === 'ON' ? 'ON' : 'OFF',
         ]);
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil disimpan');
@@ -53,7 +53,6 @@ class CategoryController extends Controller
         $category->update([
             'code' => $request->code,
             'name' => $request->name,
-            'status' => $request->has('status') && $request->status === 'ON' ? 'ON' : 'OFF',
         ]);
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil diupdate');
@@ -67,22 +66,10 @@ class CategoryController extends Controller
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus');
     }
 
-    public function updateStatus(Request $request, $code)
-    {
-        $category = Category::where('code', $code)->firstOrFail();
-
-        $newStatus = $request->status === 'ON' ? 'ON' : 'OFF';
-        $category->update(['status' => $newStatus]);
-
-        return back()->with('success', "Status updated to $newStatus");
-    }
-
-    // Tampilkan produk berdasarkan kategori yang statusnya ON untuk pembeli
+    // Tampilkan produk berdasarkan kategori untuk pembeli
     public function show($code)
     {
-        $category = Category::where('code', $code)
-                            ->where('status', 'ON')
-                            ->firstOrFail();
+        $category = Category::where('code', $code)->firstOrFail();
 
         $products = Product::where('category_code', $code)->get();
 

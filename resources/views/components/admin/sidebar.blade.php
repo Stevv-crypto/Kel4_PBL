@@ -54,24 +54,6 @@
                     <i class="fas fa-cubes mr-3"></i> Products
                 </a>
             </li>
-            <li>
-                <a href="{{ route('category.index') }}"
-                   class="flex items-center p-3 rounded-lg {{ request()->routeIs('category.index') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
-                    <i class="fas fa-tags mr-3"></i> Category
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('merk.index') }}"
-                   class="flex items-center p-3 rounded-lg {{ request()->is('admin/merk*') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
-                    <i class="fas fa-trademark mr-3"></i> Merk
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('manage_stock') }}"
-                   class="flex items-center p-3 rounded-lg {{ request()->routeIs('manage_stock') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
-                    <i class="fas fa-boxes mr-3"></i> Stock
-                </a>
-            </li>
         </ul>
 
         <div class="mt-8">

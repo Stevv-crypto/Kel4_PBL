@@ -14,8 +14,8 @@ class SellerController extends Controller
     public function index()
     {
         $products = Product::with(['category', 'merk', 'stock'])->get();
-        $categories = Category::where('status', 'ON')->get();
-        $merks = Merk::where('status', 'ON')->get();
+        $categories = Category::all();
+        $merks = Merk::all();
 
         return view('pages.admin.manage_product', compact('products', 'categories', 'merks'));
     }
@@ -25,8 +25,8 @@ class SellerController extends Controller
         $data = $request->validate([
             'code_product' => 'required|string|max:255|unique:products,code_product',
             'name' => 'required|string|max:255',
-            'category' => ['required', 'exists:categories,code', fn($a, $v, $f) => Category::where('code', $v)->where('status', 'ON')->exists() ?: $f('Kategori tidak tersedia.')],
-            'merk' => ['required', 'exists:merks,code', fn($a, $v, $f) => Merk::where('code', $v)->where('status', 'ON')->exists() ?: $f('Merk tidak tersedia.')],
+            'category' => ['required', 'exists:categories,code'],
+            'merk' => ['required', 'exists:merks,code'],
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'warranty' => 'nullable|string',
@@ -62,8 +62,8 @@ class SellerController extends Controller
         $data = $request->validate([
             'code_product' => "required|string|max:255|unique:products,code_product,{$code_product},code_product",
             'name' => 'required|string|max:255',
-            'category' => ['required', 'exists:categories,code', fn($a, $v, $f) => Category::where('code', $v)->where('status', 'ON')->exists() ?: $f('Kategori tidak tersedia.')],
-            'merk' => ['required', 'exists:merks,code', fn($a, $v, $f) => Merk::where('code', $v)->where('status', 'ON')->exists() ?: $f('Merk tidak tersedia.')],
+            'category' => ['required', 'exists:categories,code'],
+            'merk' => ['required', 'exists:merks,code'],
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'warranty' => 'nullable|string',
@@ -110,5 +110,104 @@ class SellerController extends Controller
         });
 
         return redirect()->route('manage_product.index')->with('success', 'Product and stock deleted!');
+    }
+
+    public function updateStock(Request $request, $code_product)
+    {
+        $request->validate([
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $stock = Stock::where('code_product', $code_product)->firstOrFail();
+        $stock->stock = $request->stock;
+        $stock->save();
+
+        return redirect()->route('manage_product.index')->with('success', 'Stock updated successfully!');
+    }
+
+    public function storeMerk(Request $request)
+    {
+        $data = $request->validate([
+            'code' => 'required|string|max:255|unique:merks,code',
+            'name' => 'required|string|max:255',
+        ]);
+
+        Merk::create([
+            'code' => $data['code'],
+            'name' => $data['name'],
+        ]);
+
+        return redirect()->route('manage_product.index')->with('success', 'Brand added successfully!');
+    }
+
+    public function updateMerk(Request $request, $code)
+    {
+        $merk = Merk::findOrFail($code);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $merk->update([
+            'name' => $data['name'],
+        ]);
+
+        return redirect()->route('manage_product.index')->with('success', 'Brand updated successfully!');
+    }
+
+    public function destroyMerk($code)
+    {
+        $merk = Merk::withCount('products')->findOrFail($code);
+
+        if ($merk->products_count > 0) {
+            return redirect()->route('manage_product.index')->with('error', 'Tidak bisa menghapus Brand karena masih ada produk.');
+        }
+
+        $merk->delete();
+
+        return redirect()->route('manage_product.index')->with('success', 'Brand deleted successfully!');
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $data = $request->validate([
+            'code' => 'required|string|max:255|unique:categories,code',
+            'name' => 'required|string|max:255',
+        ]);
+
+        Category::create([
+            'code' => $data['code'],
+            'name' => $data['name'],
+        ]);
+
+        return redirect()->route('manage_product.index')->with('success', 'Category added!');
+    }
+
+    public function updateCategory(Request $request, $code)
+    {
+        $category = Category::findOrFail($code);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->update([
+            'name' => $data['name'],
+        ]);
+
+        return redirect()->route('manage_product.index')->with('success', 'Category updated!');
+    }
+
+    public function destroyCategory($code)
+    {
+        $category = Category::withCount('products')->findOrFail($code);
+
+        if ($category->products_count > 0) {
+            return redirect()->route('manage_product.index')->with('error', 'Tidak bisa menghapus kategori karena masih ada produk.');
+        }
+
+        $category->delete();
+
+        return redirect()->route('manage_product.index')->with('success', 'Category deleted!');
     }
 }
