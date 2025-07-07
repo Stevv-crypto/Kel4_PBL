@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-TechnoCart - Elektronik Rumah Tangga Terpercaya</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
+
         * {
             font-family: 'Inter', sans-serif;
         }
-        
+
         .hero-gradient {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
         }
@@ -134,7 +133,7 @@
                 <div class="text-2xl font-bold blue-gradient bg-clip-text text-transparent animate-bounce-in">
                     E-TechnoCart
                 </div>
-                
+
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="{{ route('home_page') }}" class="text-black text-base font-medium">Home</a>
                     <a href="{{ route('chat.index') }}" class="text-black text-base font-medium">Contact</a>
@@ -268,65 +267,47 @@
     <section id="products" class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">Best-Selling Product Categories</h2>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Best-Selling Product</h2>
                 <p class="text-gray-600 text-lg">Explore a wide selection of premium home electronics</p>
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate">
-                    <div class="blue-gradient w-full h-40 rounded-xl flex items-center justify-center mb-6">
-                        <img src="{{ asset('image/smarttv.png') }}" alt="Smart Tv" class="object-cover h-full w-full rounded-xl">
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Smart TV </h3>
-                    <p class="text-gray-600 text-sm mb-4">Clear picture quality and smooth, uninterrupted streaming</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-600 font-semibold">150+ Products</span>
-                        <i class='bx bx-chevron-right text-blue-600'></i>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.1s;">
-                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
-                        <img src="{{ asset('image/kulkas.png') }}" alt="Refrigerator" class="object-cover h-full w-full rounded-xl">
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Refrigerators & Freezers</h3>
-                    <p class="text-gray-600 text-sm mb-4">Keep your food fresh with advanced cooling technology</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-green-600 font-semibold">89+ Products</span>
-                        <i class='bx bx-chevron-right text-green-600'></i>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.2s;">
-                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
-                        <img src="{{ asset('image/mesincuci.png') }}" alt="Washing Machine" class="object-cover h-full w-full rounded-xl">
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Washing Machines</h3>
-                    <p class="text-gray-600 text-sm mb-4">Modern laundry solutions for every household</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-purple-600 font-semibold">67+ Product</span>
-                        <i class='bx bx-chevron-right text-purple-600'></i>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl shadow-lg card-hover scroll-animate" style="animation-delay: 0.3s;">
-                    <div class="bg-gradient-to-r from-orange-500 to-red-500 w-full h-40 rounded-xl flex items-center justify-center mb-6">
-                        <img src="{{ asset('image/kipasangin.png') }}" alt="Cooling Fan" class="object-cover h-full w-full rounded-xl">
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Cooling Fans</h3>
-                    <p class="text-gray-600 text-sm mb-4">Modern designs with strong airflow — perfect for hot days</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-orange-600 font-semibold">200+ Produk</span>
-                        <i class='bx bx-chevron-right text-orange-600'></i>
-                    </div>
-                </div>
+                @foreach($bestSelling as $product)
+                    <a href="{{ route('product.show', $product->code_product) }}" class="group block bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
+                        <div class="p-4">
+                            <div class="bg-gray-50 rounded-lg p-4 group-hover:bg-gray-100 transition-colors duration-200">
+                                @if ($product->image)
+                                    <img src="{{ asset('storage/'. $product->image) }}" alt="{{ $product->name }}"
+                                        class="w-full h-32 object-contain mx-auto group-hover:scale-105 transition-transform duration-200" />
+                                @else
+                                    <div class="w-full h-32 flex items-center justify-center bg-gray-100 text-gray-400 text-sm rounded-lg border-2 border-dashed border-gray-300">
+                                        <div class="text-center">
+                                            <i class='bx bx-image text-2xl mb-2'></i>
+                                            <div class="font-medium">No Image</div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4">
+                            <div class="text-center space-y-3">
+                                <h4 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                                    {{ $product->name }}
+                                </h4>
+
+                                <p class="text-xl font-bold text-gray-900">
+                                    Rp {{ number_format($product->price, 2, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
             </div>
         </div>
     </section>
 
 
     <!-- Footer -->
-    @include('partials.footer')
+    @include('components.pembeli.footer')
 
     <script>
         // Smooth scrolling for navigation links
@@ -374,5 +355,7 @@
             }
         });
     </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 </html>

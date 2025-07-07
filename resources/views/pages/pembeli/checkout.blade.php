@@ -46,7 +46,7 @@
           @foreach ($cart as $item)
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <img src="{{ asset($item->product->image) }}" alt="{{ $item->product->product_name }}" class="w-10 h-10 rounded-md">
+              <img src="{{ asset('storage/'. $item->product->image) }}" alt="{{ $item->product->product_name }}" class="w-10 h-10 rounded-md">
               <span class="font-medium">{{ $item->product->name }} x {{ $item->quantity }}</span>
             </div>
             <span>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>

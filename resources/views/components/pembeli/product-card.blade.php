@@ -1,3 +1,13 @@
+<!-- Tailwind Utility for line-clamp-2 -->
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
 <a href="{{ route('product.show', $product->code_product) }}" 
    class="group block bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
 
@@ -94,6 +104,10 @@
             body: JSON.stringify({ quantity: 1 })
         })
         .then(response => {
+            if(response.status === 401) {
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
             if (!response.ok) {
                 return response.json().then(err => {
                     throw new Error(err.message || 'Failed to add to cart');
@@ -102,6 +116,8 @@
             return response.json();
         })
         .then(data => {
+            if (!data) return;
+
             button.innerHTML = `
                 <span class="flex items-center justify-center gap-2">
                     <i class='bx bx-check'></i>
@@ -170,13 +186,3 @@
         }
     }
 </script>
-
-<!-- Tailwind Utility for line-clamp-2 -->
-<style>
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>

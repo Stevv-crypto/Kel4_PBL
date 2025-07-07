@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
-    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     @stack('styles')
     @livewireStyles
 
@@ -15,7 +15,9 @@
 
 <body class="font-sans bg-white">
     <div class="relative">
-        @include('components.pembeli.header')
+        @if(!isset($noHeader))
+            @include('components.pembeli.header')
+        @endif
 
         <div class="container mx-auto px-4 py-8">
             {{ $slot ?? '' }}

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Category;
+use App\Models\OrderItem;
+use App\Models\SalesReport;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalesReportController extends Controller
 {
@@ -37,5 +40,24 @@ class SalesReportController extends Controller
         $sales = $query->get();
 
         return view('pages.admin.sales-report', compact('sales', 'categories'));
+    }
+
+    public function bestSeller() {
+        $bestSelling = SalesReport::select('product_code', DB::raw('SUM(piece) as total_sold'))
+            ->groupBy('product_code')
+            ->orderBy('total_sold', 'desc')
+            ->take(4)
+            ->get();
+        
+        $codes = $bestSelling->pluck('product_code')->toArray();
+
+        $products = Product::whereIn('code_product', $codes)->get();
+        
+        $products = $products->map(function ($product) use ($bestSelling) {
+            $sold = $bestSelling->firstWhere('product_code', $product->code_product);
+            $product->total_sold = $sold ? $sold->total_sold : 0;
+            return $product;
+        });
+        return view('landing', ['bestSelling' => $products]);
     }
 }

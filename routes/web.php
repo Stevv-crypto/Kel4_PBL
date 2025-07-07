@@ -32,7 +32,7 @@ use App\Http\Controllers\VerificationController;
 */
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\productController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductAdminController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
@@ -45,9 +45,7 @@ use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SalesReportController;
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [SalesReportController::class, 'bestSeller'])->name('landing');
 
 /*
 /------------------------------------------------------------------
