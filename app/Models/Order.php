@@ -11,7 +11,14 @@ class Order extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'order_code', 'user_id', 'payment_id', 'status', 'total_price', 'payment_proof'
+        'order_code', 'user_id', 'payment_id', 'status',
+        'total_price', 'payment_proof', 'expired_at' 
+    ];
+
+    protected $casts = [
+        'expired_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function user()

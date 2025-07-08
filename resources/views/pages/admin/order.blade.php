@@ -64,9 +64,15 @@
             </ul>
           </td>
 
+          <!--tambahan baru-->
           <td class="p-3">
-            <strong>{{ $order->payment->method_name ?? 'N/A' }}</strong><br>
-            <small class="text-gray-500">{{ $order->payment->account_number }}</small>
+            @if ($order->payment)
+              <strong>{{ $order->payment->method_name ?? 'N/A' }}</strong><br>
+              <small class="text-gray-500">{{ $order->payment->account_number }}</small>
+            @else
+              <strong class="text-red-600">Belum memilih metode</strong><br>
+              <small class="text-gray-400">-</small>
+            @endif
           </td>
 
           <td class="p-3">

@@ -1,18 +1,17 @@
 <?php
 
+// app/Http/Controllers/CheckoutController.php
+
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\OrderItem;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Stock;
+use App\Models\OrderItem;
 
 class CheckoutController extends Controller
 {
@@ -20,21 +19,20 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
 
-        // Redirect jika data user belum lengkap
+        // ⛑️ Pastikan selalu terdefinisi
+        $showProfileWarning = false;
+
         if (!$user->address || !$user->phone) {
-            session(['redirect_after_profile' => route('checkout.show')]);
-            return redirect()->route('profile')->with('error', 'Lengkapi profil Anda sebelum checkout.');
+            $showProfileWarning = true;
         }
 
-        $userEmail = $user->email;
-        $selectedItems = $request->input('selected_items', []); // array dari checkbox
-
+        $selectedItems = $request->input('selected_items', []);
         if (empty($selectedItems)) {
             return redirect()->route('cart')->with('error', 'Pilih item terlebih dahulu.');
         }
 
         $cart = Cart::with('product')
-            ->where('user_email', $userEmail)
+            ->where('user_email', $user->email)
             ->whereIn('code_cart', $selectedItems)
             ->get();
 
@@ -43,74 +41,85 @@ class CheckoutController extends Controller
         }
 
         $total = $cart->sum('subtotal');
-        $paymentMethods = Payment::all();
 
-        return view('pages.pembeli.checkout', [
-            'user' => $user,
-            'cart' => $cart,
-            'total' => $total,
-            'paymentMethods' => $paymentMethods,
+        session([
+            'checkout_data' => [
+                'selected_items' => $selectedItems,
+                'total_price' => $total,
+            ]
         ]);
+
+        return view('pages.pembeli.checkout', compact('user', 'cart', 'total', 'showProfileWarning'));
     }
 
-    public function processCheckout(Request $request)
+    public function toPaymentPage(Request $request)
     {
-        $request->validate([
-            'payment_method' => 'required|integer|exists:payments,id',
-            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'selected_items' => 'required|array|min:1', // pastikan item dipilih
-            'selected_items.*' => 'exists:carts,code_cart',
-        ]);
-
-        $payment = Payment::findOrFail($request->payment_method);
-
         $user = Auth::user();
         $selectedItems = $request->input('selected_items', []);
 
-        // Ambil item dari keranjang berdasarkan pilihan user
+        // Ambil item yang dipilih dari keranjang
         $cartItems = Cart::with('product')
             ->where('user_email', $user->email)
             ->whereIn('code_cart', $selectedItems)
             ->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart')->with('error', 'Item yang dipilih tidak valid.');
+            return redirect()->route('cart')->with('error', 'Tidak ada item yang dipilih untuk checkout.');
         }
 
-        $total = $cartItems->sum('subtotal');
-        $orderCode = 'ORD-' . strtoupper(Str::random(10));
+        // ✅ Validasi stok sebelum lanjut
+        foreach ($cartItems as $item) {
+            $stock = Stock::where('code_product', $item->code_product)->first();
+            if (!$stock || $stock->stock < $item->quantity) {
+                return redirect()->route('cart')->with('error', 'Stok tidak mencukupi untuk produk: ' . $item->product->name);
+            }
+        }
 
-        // Simpan file bukti pembayaran
-        $file = $request->file('payment_proof');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = $file->storeAs('public/payment_proofs', $fileName);
+        // Hitung total harga dari item terpilih
+        $total = $cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
 
-        // Simpan order ke tabel `orders`
+        // Generate kode unik pesanan
+        $orderCode = 'ORD-' . strtoupper(uniqid());
+
+        // Simpan order ke database
         $order = Order::create([
-            'order_code' => $orderCode,
-            'user_id' => $user->id,
-            'payment_id' => $request->payment_method,
-            'total_price' => $total,
-            'status' => 'waiting',
-            'payment_proof' => 'payment_proofs/' . $fileName,
+            'order_code'   => $orderCode,
+            'user_id'      => $user->id,
+            'total_price'  => $total,
+            'status'       => 'pending_payment',
+            'expired_at' => now()->addMinutes(4), // ⏰ batas waktu pembayaran
         ]);
 
-        // Simpan item pesanan ke tabel `order_items`
+        // Simpan detail item ke tabel order_items dan kurangi stok
         foreach ($cartItems as $item) {
             OrderItem::create([
-                'order_code' => $orderCode,
-                'code_product' => $item->code_product,
-                'quantity' => $item->quantity,
-                'price' => $item->product->price,
-                'subtotal' => $item->subtotal,
+                'order_code'    => $orderCode,
+                'code_product'  => $item->code_product,
+                'quantity'      => $item->quantity,
+                'order_price'   => $item->product->price,
+                'subtotal'      => $item->subtotal,
             ]);
+
+            // Kurangi stok produk
+            $stockRecord = Stock::where('code_product', $item->code_product)->first();
+            if ($stockRecord) {
+                $stockRecord->decrement('stock', $item->quantity);
+            }
         }
 
-        // Hapus item yang sudah diorder dari keranjang (bukan semua!)
-        Cart::whereIn('code_cart', $selectedItems)->delete();
+        // Hapus dari keranjang setelah checkout
+        Cart::whereIn('code_cart', $selectedItems)
+            ->where('user_email', $user->email)
+            ->delete();
 
-        return redirect()->route('home_page')->with('success', 'Pesanan berhasil dibuat. Tunggu konfirmasi admin.');
+        // Simpan ke session untuk akses sementara
+        session([
+            'latest_order_code' => $orderCode,
+            'payment_success' => true,
+        ]);
+
+        return redirect()->route('payment.page');
     }
-
-
 }

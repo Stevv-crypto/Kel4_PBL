@@ -13,6 +13,15 @@
 </nav>
 
 <main class="my-12 px-4 sm:px-6 md:px-10 lg:px-20">
+  @php
+    $availableStock = optional($product->stock)->stock ?? 0;
+    $userEmail = Auth::check() ? Auth::user()->email : null;
+    $cartQty = $userEmail ? \App\Models\Cart::where('user_email', $userEmail)
+                ->where('code_product', $product->code_product)
+                ->sum('quantity') : 0;
+    $remainingStock = max($availableStock - $cartQty, 0);
+  @endphp
+
   <div class="grid lg:grid-cols-2 gap-12 max-w-7xl mx-auto">  
     <!-- Enhanced Image Section -->
     <div class="relative">
@@ -54,17 +63,14 @@
         <h1 class="text-2xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
         
         <!-- Stock Status - Dipindah ke bawah nama produk -->
-        @php
-          $availableStock = optional($product->stock)->stock ?? 0;
-        @endphp
         <div class="flex items-center gap-2">
-          @if($availableStock > 10)
+          @if($remainingStock > 10)
             <div class="flex items-center gap-2 bg-green-50 text-green-800 px-2 py-1 rounded-full border border-green-200">
               <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
               <span class="font-semibold text-xs">In Stock</span>
               <span class="bg-green-200 text-green-800 px-1.5 py-0.5 rounded-full text-xs font-bold">{{ $availableStock }}</span>
             </div>
-          @elseif($availableStock > 0)
+          @elseif($remainingStock > 0)
             <div class="flex items-center gap-2 bg-orange-50 text-orange-800 px-2 py-1 rounded-full border border-orange-200">
               <div class="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
               <span class="font-semibold text-xs">Limited Stock</span>
@@ -131,7 +137,7 @@
       </div>
 
       <!-- Add to Cart Section - Lebih kompak -->
-      @if ($availableStock > 0)
+      @if ($remainingStock > 0)
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-2.5">
           <form action="{{ route('cart.add', ['code_product' => $product->code_product]) }}" method="POST" class="space-y-1.5">
             @csrf
@@ -198,8 +204,8 @@
   </div>
 </main>
 
-@if ($availableStock > 0)
-<div id="product-data" data-max-stock="{{ $availableStock }}"></div>
+@if ($remainingStock > 0)
+<div id="product-data" data-max-stock="{{ $remainingStock }}"></div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

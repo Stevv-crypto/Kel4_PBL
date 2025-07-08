@@ -16,86 +16,70 @@
       </div>
     </div>
 
-    <!-- Kanan: Notifikasi & Profile -->
+    <!--  Notifikasi dan  Profile -->
     <div class="flex items-center space-x-4 md:space-x-6">
-      
-      <!-- Notifikasi dengan Dropdown -->
-      <div class="relative mx-2 sm:mx-4" x-data="{ openNotif: false, showDetail: false }" @click.away="openNotif = false; showDetail = false">
-        <button 
-          class="flex text-gray-700 focus:outline-none relative"
-          @click="openNotif = !openNotif">
+      <div class="relative" x-data="{ openNotif: false }" @click.away="openNotif = false">
+        <button @click="openNotif = !openNotif" class="relative">
           <i class="fas fa-bell text-xl"></i>
           <span class="absolute top-0 right-0 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">
-            {{ count($waitingOrders) }}</span>
+            {{ count($waitingOrders) }}
+          </span>
         </button>
 
-        <!-- Dropdown Notifikasi -->
-        <div x-show="openNotif" 
-          x-transition class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-20 max-h-[400px] overflow-y-auto"
+        <!-- Notifikasi Dropdown -->
+        <div 
+          x-show="openNotif"
+          x-transition:enter="transition ease-out duration-200"
+          x-transition:enter-start="opacity-0 translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="absolute right-0 mt-3 w-80 bg-gray-50 rounded-xl shadow-lg border border-gray-200 max-h-[400px] overflow-y-auto z-50"
           style="display: none;">
-        <!-- Header -->
-        <div class="px-6 py-4 border-b bg-gray-100">
-            <h2 class="text-lg font-semibold text-gray-800">Order Notification</h2>
-        </div>
 
-        <!-- Tampilan Ringkas -->
-        @forelse ($waitingOrders as $order)
-        <div x-data="{ showDetail: false }" class="border-b"> 
-            <!-- Tampilan Ringkas -->
-            <div class="px-4 py-2 border-b" x-show="!showDetail" x-transition>
-                <div class="flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
-                    <div>
-                    <h3 class="text-gray-900 font-medium">{{ $order->user->name }}</h3>
-                    <p class="text-gray-500 text-sm">Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
-                    </div>
+          <!-- Header -->
+          <div class="px-5 py-4 border-b border-gray-200 bg-gray-100 rounded-t-xl">
+            <h2 class="text-sm font-semibold text-gray-700 tracking-wide uppercase">
+              Notifikasi Pesanan
+            </h2>
+          </div>
+
+          <!-- Isi Notifikasi -->
+          @forelse ($waitingOrders->take(6) as $order)
+          <a href="{{ route('notif.index') }}" class="block hover:bg-gray-100 transition">
+            <div class="flex items-center gap-4 px-5 py-4 border-b border-gray-100">
+              <!-- Icon -->
+              <div class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-full shadow-sm">
+                <i class="fas fa-receipt text-indigo-500 text-sm"></i>
+              </div>
+              
+              <!-- Detail -->
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-center">
+                  <p class="text-sm font-medium text-gray-800 truncate">{{ $order->user->name }}</p>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full 
+                    {{ $order->status === 'pending_payment' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }}">
+                    {{ $order->status === 'pending_payment' ? 'Belum Membayar' : 'Sudah Membayar' }}
+                  </span>
                 </div>
-            <div class="mt-4 text-right">
-                <button @click="showDetail = true" class="text-blue-600 hover:underline font-medium">Lihat</button>
+                <p class="text-xs text-gray-500 truncate">
+                  Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                </p>
+              </div>
             </div>
-        </div>
+          </a>
+            @empty
+            <div class="p-5 text-center text-sm text-gray-500">
+              Tidak ada order baru.
+            </div>
+            @endforelse
 
-        <!-- Tampilan Detail -->
-        <div class="p-6 space-y-4" x-show="showDetail" x-transition>
-            <div>
-                <h3 class="font-semibold text-gray-700">Detail Order</h3>
-                <ul class="text-sm text-gray-600 list-disc list-inside mt-2">
-                @foreach ($order->orderItems as $item)
-                    <li>{{ $item->product->name }}</li>
-                    <li>Jumlah: {{ $item->quantity }}</li>
-                @endforeach
-                <li>Metode Pembayaran: {{ $order->payment->method_name }}</li>
-                </ul>
+            <!-- Footer -->
+            <div class="px-5 py-3 bg-gray-100 border-t border-gray-200 rounded-b-xl text-center">
+              <a href="{{ route('notif.index') }}" class="text-sm font-medium text-indigo-600 hover:underline">
+                Lihat Semua Notifikasi
+              </a>
             </div>
-
-            <div>
-                <h4 class="font-semibold text-gray-700">Bukti Pembayaran</h4>
-                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti" class="mt-2 w-full rounded-md border" />
-            </div>
-
-            <div class="flex justify-end space-x-6 pt-4">
-                <form method="POST" action="{{ route('order.reject', $order) }}">
-                    @csrf
-                    <button type="submit" class="text-red-600 hover:underline">✖ Tolak</button>
-                </form>
-                <form method="POST" action="{{ route('order.confirm', $order) }}">
-                    @csrf
-                    <button type="submit" class="text-green-600 hover:underline">✔ Konfirmasi</button>
-                </form>                
-            </div>
-
-            <div class="text-right">
-                <button @click="showDetail = false" class="text-sm text-gray-500 hover:underline">⬅ Kembali</button>
-            </div>
-        </div>
-    </div>
-        @empty
-        <div class="p-6 text-center text-gray-500">
-            Tidak ada order baru.
-        </div>
-        @endforelse
-    </div>
-  </div>
+          </div>
+      </div>
 
 
       <!-- Profile & Dropdown -->

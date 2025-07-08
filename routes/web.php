@@ -16,6 +16,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DetailproductController;
 use App\Http\Controllers\viewAllController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AboutController;
@@ -145,18 +146,19 @@ Route::group(['middleware' => ['auth', 'check_role:pembeli', 'check_status']], f
     Route::get('/kategori/{category}', [ProductController::class, 'showCategory'])->name('category');
 
     // Cart
+    Route::post('/cart/add/{code_product}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'showCart'])->name('cart'); 
     Route::put('/cart/update/{code_product}', [CartController::class, 'updateCart'])->name('cart.update'); // Update keranjang
-    Route::post('/cart/add/{code_product}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/cart/remove/{code_product}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // Hapus produk dari keranjang
-
+    Route::get('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Hapus semua produk
+    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/payment/upload-proof', [PaymentController::class, 'uploadPaymentProof'])->name('payment.upload_proof');
+    Route::get('/payment', [PaymentController::class, 'showPaymentPage'])->name('payment.page');
+    Route::post('/checkout/to-payment', [CheckoutController::class, 'toPaymentPage'])->name('checkout.to_payment');
+    
     // Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    // Checkout
-    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
-    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 
     //category
     Route::resource('category', CategoryController::class);
@@ -218,16 +220,16 @@ Route::group(['middleware' => ['auth', 'check_role:admin', 'check_status']], fun
 
     //order
     Route::get('/order', [OrderController::class, 'index'])->name('order');
-    Route::post('/order/{order}/confirm', [OrderController::class, 'confirm'])->name('order.confirm');
-    Route::post('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
+    Route::post('/order/confirm/{order}', [OrderController::class, 'confirm'])->name('order.confirm');
+    Route::post('/order/reject/{order}', [OrderController::class, 'reject'])->name('order.reject');
     Route::post('/order/{order}/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 
-    //Invoice
-    Route::post('/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
-    Route::get('/invoice', [InvoiceController::class, 'showInvoice'])->name('invoice.show');
-
+    
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
 
     Route::get('/admin/sales-report', [SalesReportController::class, 'index'])->name('sales.report');
 });
+//Invoice
+    Route::get('/invoice/{order_code}', [InvoiceController::class, 'show'])->name('invoice.show');
+    Route::get('/admin/notifikasi', [OrderController::class, 'showNotif'])->name('notif.index');

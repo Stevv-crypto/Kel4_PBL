@@ -67,6 +67,7 @@
             <td class="p-3 capitalize">
               <span class="px-2 py-1 rounded
                 @switch($order->status)
+                  @case('pending_payment') bg-orange-100 text-orange-800 @break
                   @case('waiting') bg-yellow-100 text-yellow-800 @break
                   @case('processing') bg-blue-100 text-blue-800 @break
                   @case('sent') bg-purple-100 text-purple-800 @break
@@ -79,9 +80,16 @@
             </td>
 
             <td class="p-3">
-              <a href="{{ route('order.invoice', $order->order_code) }}" class="text-blue-600 hover:underline">
-                Details
-              </a>
+              @if($order->status === 'pending_payment')
+                <a href="{{ route('payment.page', ['order_code' => $order->order_code]) }}"
+                  class="text-red-600 hover:underline">
+                  Pay Now
+                </a>
+              @else
+                <a href="{{ route('order.invoice', $order->order_code) }}" class="text-blue-600 hover:underline">
+                  Details
+                </a>
+              @endif
             </td>
           </tr>
 

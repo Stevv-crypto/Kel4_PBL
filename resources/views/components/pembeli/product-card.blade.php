@@ -38,6 +38,10 @@
 
             @php
                 $stockCount = optional($product->stock)->stock ?? 0;
+                $userEmail = Auth::check() ? Auth::user()->email : null;
+                $cartQty = $userEmail ? \App\Models\Cart::where('user_email', $userEmail)
+                            ->where('code_product', $product->code_product)
+                            ->sum('quantity') : 0;
             @endphp
 
             <div class="flex items-center justify-center gap-2 text-sm">
@@ -64,19 +68,26 @@
 
     <!-- Add to Cart Button -->
     <div class="px-4 pb-4">
-        @if ($stockCount > 0)
-            <button onclick="event.stopPropagation(); event.preventDefault(); addToCart('{{ $product->code_product }}')"
-                    class="add-to-cart-btn w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-md transform hover:-translate-y-0.5">
-                <i class='bx bx-cart'></i> 
-                Add to Cart
-            </button>
-        @else
+        @if ($stockCount <= 0)
             <div class="w-full bg-gray-400 text-white py-3 rounded-lg text-sm text-center cursor-not-allowed font-semibold">
                 <span class="flex items-center justify-center gap-2">
                     <i class='bx bx-x-circle'></i>
                     Out of Stock
                 </span>
             </div>
+        @elseif ($cartQty >= $stockCount)
+            <div class="w-full bg-yellow-500 text-white py-3 rounded-lg text-sm text-center cursor-not-allowed font-semibold">
+                <span class="flex items-center justify-center gap-2">
+                    <i class='bx bx-error'></i>
+                    Maximum quantity reached
+                </span>
+            </div>
+        @else
+            <button onclick="event.stopPropagation(); event.preventDefault(); addToCart('{{ $product->code_product }}')"
+                    class="add-to-cart-btn w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-md transform hover:-translate-y-0.5">
+                <i class='bx bx-cart'></i> 
+                Add to Cart
+            </button>
         @endif
     </div>
 </a>

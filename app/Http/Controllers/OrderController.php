@@ -37,46 +37,61 @@ class OrderController extends Controller
 
     // Update status dan input ke tabel sales_reports jika completed
     public function updateStatus(Request $request, Order $order)
-{
-    $validated = $request->validate([
-        'status' => 'required|in:waiting,processing,sent,complete,rejected',
-    ]);
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:waiting,processing,sent,complete,rejected',
+        ]);
 
-    // ✅ Cegah update jika order sudah complete
-    if ($order->status === 'complete') {
-        return back()->with('error', 'Status tidak bisa diubah karena pesanan sudah complete.');
-    }
-
-    $order->status = $validated['status'];
-    $order->save();
-
-    // ✅ Jika status selesai (complete), input ke sales_reports
-    if ($validated['status'] === 'complete') {
-        // Cek apakah order ini sudah pernah dikirim ke sales_report
-        $alreadyExists = SalesReport::where('order_code', $order->order_code)->exists();
-
-        if ($alreadyExists) {
-            return back()->with('error', 'Data sales report untuk pesanan ini sudah pernah dikirim.');
+        // ✅ Cegah update jika order sudah complete
+        if ($order->status === 'complete') {
+            return back()->with('error', 'Status tidak bisa diubah karena pesanan sudah complete.');
         }
 
-        // Insert ke sales_reports
-        foreach ($order->orderItems as $item) {
-            $product = $item->product;
+        $order->status = $validated['status'];
+        $order->save();
 
-            SalesReport::create([
-                'order_code'      => $order->order_code,
-                'product_code'    => $product->code_product,
-                'product'         => $product->name,
-                'category'        => $product->category,
-                'merk'            => $product->merk,
-                'piece'           => $item->quantity,
-                'price_per_piece' => $item->subtotal / max($item->quantity, 1), // Hindari pembagian 0
-                'date'            => now()->toDateString(),
-            ]);
+        // ✅ Jika status selesai (complete), input ke sales_reports
+        if ($validated['status'] === 'complete') {
+            // Cek apakah order ini sudah pernah dikirim ke sales_report
+            $alreadyExists = SalesReport::where('order_code', $order->order_code)->exists();
+
+            if ($alreadyExists) {
+                return back()->with('error', 'Data sales report untuk pesanan ini sudah pernah dikirim.');
+            }
+
+            // Insert ke sales_reports
+            foreach ($order->orderItems as $item) {
+                $product = $item->product;
+
+                SalesReport::create([
+                    'order_code'      => $order->order_code,
+                    'product_code'    => $product->code_product,
+                    'product'         => $product->name,
+                    'category'        => $product->category,
+                    'merk'            => $product->merk,
+                    'piece'           => $item->quantity,
+                    'price_per_piece' => $item->subtotal / max($item->quantity, 1), // Hindari pembagian 0
+                    'date'            => now()->toDateString(),
+                ]);
+            }
         }
-    }
 
-    return back()->with('success', 'Order status updated.');
-}
+        return back()->with('success', 'Order status updated.');
+    }
+    
+    public function showNotif()
+    {
+        // Ambil semua order dengan status waiting
+        $waitingOrders = Order::with(['user', 'orderItems.product', 'payment'])
+                        ->whereIn('status', ['pending_payment', 'waiting'])
+                        ->latest()
+                        ->get();
+
+            return view('pages.admin.notification', [
+            'waitingOrders' => $waitingOrders,
+            'waitingOrdersJson' => $waitingOrders->toJson(),
+        ]);
+
+    }
 
 }
