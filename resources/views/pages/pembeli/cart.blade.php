@@ -9,99 +9,107 @@
 </nav>
 
 @if($cart->isEmpty())
-    <div class="text-center text-gray-600 py-12">
-        Keranjang kamu kosong 😢 <br>
-        <a href="{{ route('home_page') }}" class="text-blue-600 hover:underline">Belanja Sekarang</a>
-    </div>
+<div class="text-center text-gray-600 py-20">
+    <h2 class="text-2xl font-semibold mb-2">Keranjang kamu kosong 😢</h2>
+    <a href="{{ route('home_page') }}" class="inline-block mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition">
+        Belanja Sekarang
+    </a>
+</div>
 @else
-<div class="overflow-x-auto mt-4">
-    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-        <thead class="bg-gray-200 text-gray-700 text-left">
-            <tr>
-                <th class="py-3 px-4"></th>
-                <th class="py-3 px-4">Product</th>
-                <th class="py-3 px-4">Price</th>
-                <th class="py-3 px-4">Quantity</th>
-                <th class="py-3 px-4">Subtotal</th>
-                <th class="py-3 px-4">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($cart as $item)
+<section class="py-10 px-4 md:px-14">
+    <div class="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+        <table class="min-w-full bg-white divide-y divide-gray-200">
+            <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+                <tr>
+                    <th class="py-3 px-4 text-center">
+                        <i class="fa-regular fa-circle-check"></i>
+                    </th>
+                    <th class="py-3 px-4 text-left">Produk</th>
+                    <th class="py-3 px-4 text-right">Harga</th>
+                    <th class="py-3 px-4 text-center">Jumlah</th>
+                    <th class="py-3 px-4 text-right">Subtotal</th>
+                    <th class="py-3 px-4 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-sm">
+                @foreach($cart as $item)
                 @php
                     $product = $item->product;
                     $stock = optional($product->stock)->stock ?? 0;
                     $isOutOfStock = $stock === 0;
                     $isLimited = $stock <= $item->quantity;
                 @endphp
-
-                <tr class="border-t {{ $isOutOfStock ? 'opacity-50 pointer-events-none' : '' }}">
+                <tr class="{{ $isOutOfStock ? 'opacity-50' : '' }}">
                     <td class="py-4 px-4 text-center">
-                        @if ($isOutOfStock)
-                            <input type="checkbox" disabled class="cursor-not-allowed opacity-50">
-                        @else
-                            <input type="checkbox" class="item-checkbox" value="{{ $item->code_cart }}" data-subtotal="{{ $item->subtotal }}">
-                        @endif
+                        <input type="checkbox" 
+                               class="item-checkbox" 
+                               value="{{ $item->code_cart }}" 
+                               data-subtotal="{{ $item->subtotal }}"
+                               {{ $isOutOfStock ? 'disabled class=cursor-not-allowed' : '' }}>
                     </td>
-                    <td class="py-4 px-4 flex items-center">
-                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-10 h-10 mr-3 rounded shadow">
+                    <td class="py-4 px-4 flex items-center gap-4">
+                        <img src="{{ asset('storage/' . $item->product->image) }}" class="w-14 h-14 rounded object-cover border" alt="">
                         <div>
-                            <div>{{ $product->name }}</div>
+                            <div class="font-medium text-gray-800">{{ $product->name }}</div>
                             @if ($isOutOfStock)
-                                <div class="text-red-600 text-sm mt-1">Stok habis, produk tidak tersedia.</div>
+                                <p class="text-red-600 text-xs mt-1">Stok habis</p>
                             @elseif ($isLimited)
-                                <div class="text-yellow-500 text-sm mt-1">Stok terbatas, tidak bisa tambah lagi.</div>
+                                <p class="text-yellow-500 text-xs mt-1">Stok terbatas</p>
                             @endif
                         </div>
                     </td>
-                    <td class="py-4 px-4">Rp {{ number_format($product->price, 2, ',', '.') }}</td>
-                    <td class="py-4 px-4">
+                    <td class="py-4 px-4 text-right">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                    <td class="py-4 px-4 text-center">
                         @if ($isOutOfStock)
-                            <input type="number" value="{{ $item->quantity }}" class="w-16 border rounded px-2 py-1 text-center bg-gray-100" readonly>
+                        <input type="number" class="w-16 text-center border px-2 py-1 bg-gray-100 rounded" value="{{ $item->quantity }}" readonly>
                         @else
-                            <input type="number" 
-                                name="quantity" 
-                                min="1"
-                                max="{{ $stock }}"
-                                value="{{ $item->quantity }}" 
-                                data-code="{{ $product->code_product }}"
-                                class="w-16 border rounded px-2 py-1 text-center quantity-input"
-                            />
+                        <input type="number" 
+                               name="quantity" 
+                               min="1" 
+                               max="{{ $stock }}" 
+                               value="{{ $item->quantity }}" 
+                               data-code="{{ $product->code_product }}" 
+                               class="w-16 text-center border px-2 py-1 rounded quantity-input">
                         @endif
                     </td>
-
-                    <td class="py-4 px-4">Rp {{ number_format($item->subtotal, 2, ',', '.') }}</td>
-                    <td class="py-4 px-8">
+                    <td class="py-4 px-4 text-right">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    <td class="py-4 px-4 text-center">
                         <form action="{{ route('cart.remove', ['code_product' => $product->code_product]) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-700 pointer-events-auto">Remove</button>
+                            <button type="submit" class="text-red-500 hover:text-red-700">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-
-<!-- Cart Total Section and Checkout Button -->
-<div class="mt-8 bg-white p-6 shadow rounded-md max-w-sm w-full border ml-auto">
-    <h3 class="text-2xl font-semibold mb-4">Cart Total</h3>
-    <hr class="my-2">
-    <div class="flex justify-between font-semibold text-lg mb-4">
-        <span>Total:</span>
-        <span id="total-price">Rp 0,00</span>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
-    <form id="cart-form" action="{{ route('checkout.show') }}" method="GET">
-        @csrf
-        <div id="hidden-inputs"></div>
-        <button type="submit" class="block w-full bg-sky-400 hover:bg-sky-500 text-white font-medium py-2 rounded text-center mt-4">
-            Proceed to checkout
-        </button>
-    </form>
-</div>
+    <!-- Total dan Checkout -->
+    <div class="mt-8 flex justify-end">
+        <div class="bg-white shadow-md border rounded-xl w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold mb-4">Ringkasan Keranjang</h3>
+            <div class="flex justify-between text-gray-700 mb-4">
+                <span>Total:</span>
+                <span id="total-price" class="font-bold">Rp 0,00</span>
+            </div>
+
+            <form id="cart-form" action="{{ route('checkout.show') }}" method="GET">
+                @csrf
+                <div id="hidden-inputs"></div>
+                <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition">
+                    Checkout Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
 @endif
+
 
 <!-- JS untuk menghitung total berdasarkan checkbox -->
 <script>

@@ -13,7 +13,10 @@ class OrderController extends Controller
     // Menampilkan daftar semua order
     public function index()
     {
-        $orders = Order::with(['user', 'payment', 'orderItems.product'])->get();
+        $orders = Order::with(['user', 'payment', 'orderItems.product'])
+               ->where('status', '!=', 'pending_payment') // ⛔ exclude unpaid orders
+               ->latest()
+               ->get();
         return view('pages.admin.order', compact('orders'));
     }
 

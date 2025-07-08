@@ -27,60 +27,62 @@
         </button>
 
         <!-- Notifikasi Dropdown -->
-        <div 
-          x-show="openNotif"
-          x-transition:enter="transition ease-out duration-200"
-          x-transition:enter-start="opacity-0 translate-y-2"
-          x-transition:enter-end="opacity-100 translate-y-0"
-          class="absolute right-0 mt-3 w-80 bg-gray-50 rounded-xl shadow-lg border border-gray-200 max-h-[400px] overflow-y-auto z-50"
-          style="display: none;">
+      <div 
+        x-show="openNotif"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        class="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-200 max-h-[420px] overflow-y-auto z-50"
+        style="display: none;"
+      >
+        <!-- Header -->
+        <div class="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-white rounded-t-xl">
+          <h2 class="text-sm font-semibold text-gray-700 tracking-wide uppercase">
+            New Order Notifications
+          </h2>
+        </div>
 
-          <!-- Header -->
-          <div class="px-5 py-4 border-b border-gray-200 bg-gray-100 rounded-t-xl">
-            <h2 class="text-sm font-semibold text-gray-700 tracking-wide uppercase">
-              Notifikasi Pesanan
-            </h2>
-          </div>
-
-          <!-- Isi Notifikasi -->
-          @forelse ($waitingOrders->take(6) as $order)
-          <a href="{{ route('notif.index') }}" class="block hover:bg-gray-100 transition">
-            <div class="flex items-center gap-4 px-5 py-4 border-b border-gray-100">
-              <!-- Icon -->
-              <div class="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-full shadow-sm">
-                <i class="fas fa-receipt text-indigo-500 text-sm"></i>
-              </div>
-              
-              <!-- Detail -->
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-center">
-                  <p class="text-sm font-medium text-gray-800 truncate">{{ $order->user->name }}</p>
-                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full 
-                    {{ $order->status === 'pending_payment' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }}">
-                    {{ $order->status === 'pending_payment' ? 'Belum Membayar' : 'Sudah Membayar' }}
-                  </span>
-                </div>
-                <p class="text-xs text-gray-500 truncate">
-                  Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                </p>
-              </div>
+        <!-- Isi Notifikasi -->
+        @forelse ($waitingOrders->take(6) as $order)
+        <a href="{{ route('notif.index') }}" class="block hover:bg-gray-50 transition">
+          <div class="flex items-center gap-4 px-5 py-4 border-b border-gray-100">
+            <!-- Logo Metode Pembayaran -->
+            <div class="w-10 h-10 rounded-full overflow-hidden border shadow-sm bg-white flex items-center justify-center">
+              <img src="{{ asset($order->payment->logo_path) }}" 
+                  alt="{{ $order->payment->method_name }}" 
+                  class="object-contain h-6 w-6">
             </div>
+
+            
+            <!-- Detail -->
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-0.5">
+                <p class="text-sm font-medium text-gray-800 truncate">{{ $order->user->name }}</p>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                  {{ $order->status === 'pending_payment' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }}">
+                  {{ $order->status === 'pending_payment' ? 'Unpaid' : 'Paid' }}
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 truncate">
+                Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}
+              </p>
+            </div>
+          </div>
+        </a>
+        @empty
+        <div class="p-5 text-center text-sm text-gray-500">
+          No new notifications.
+        </div>
+        @endforelse
+
+        <!-- Footer -->
+        <div class="px-5 py-3 bg-gray-50 border-t border-gray-200 rounded-b-xl text-center">
+          <a href="{{ route('notif.index') }}" class="text-sm font-medium text-indigo-600 hover:underline">
+            View All Notifications
           </a>
-            @empty
-            <div class="p-5 text-center text-sm text-gray-500">
-              Tidak ada order baru.
-            </div>
-            @endforelse
-
-            <!-- Footer -->
-            <div class="px-5 py-3 bg-gray-100 border-t border-gray-200 rounded-b-xl text-center">
-              <a href="{{ route('notif.index') }}" class="text-sm font-medium text-indigo-600 hover:underline">
-                Lihat Semua Notifikasi
-              </a>
-            </div>
-          </div>
+        </div>
       </div>
-
+      </div>
 
       <!-- Profile & Dropdown -->
       <div class="relative">

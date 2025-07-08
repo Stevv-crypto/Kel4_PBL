@@ -140,9 +140,9 @@
                   <td class="px-4 py-3">
                     <div class="flex items-center space-x-3">
                       <div class="flex-shrink-0">
-                        <img src="{{ asset($item->product->image ?? 'placeholder.png') }}" 
-                             alt="{{ $item->product->name }}" 
-                             class="w-10 h-10 object-cover rounded-lg shadow-sm border border-gray-200" />
+                        <img src="{{ asset('storage/' . $item->product->image ?? 'placeholder.png') }}" 
+                            alt="{{ $item->product->product_name }}"
+                            class="w-10 h-10 object-cover rounded-lg shadow-sm border border-gray-200" />
                       </div>
                       <div>
                         <div class="font-semibold text-gray-800 text-sm">{{ $item->product->name }}</div>
@@ -155,7 +155,7 @@
                     </span>
                   </td>
                   <td class="px-4 py-3 text-center font-medium text-gray-700 text-sm">
-                    Rp{{ number_format($item->product->price, 0, ',', '.') }}
+                    Rp{{ number_format($item->order_price, 0, ',', '.') }}
                   </td>
                   <td class="px-4 py-3 text-right font-bold text-gray-800 text-sm">
                     Rp{{ number_format($item->subtotal, 0, ',', '.') }}
