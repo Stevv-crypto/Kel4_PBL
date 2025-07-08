@@ -1,3 +1,5 @@
+@php($noHeader = true)
+
 @extends('layouts.app')
 
 @section('title', 'Login')
