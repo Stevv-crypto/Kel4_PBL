@@ -16,8 +16,8 @@
           <th class="p-3">Date</th>
           <th class="p-3">Product</th>
           <th class="p-3">Category</th>
-          <th class="p-3">Merk</th>
-          <th class="p-3">Piece</th>
+          <th class="p-3">Brands</th>
+          <th class="p-3">Quantity</th>
           <th class="p-3">Payment</th>
           <th class="p-3">Proof</th>
           <th class="p-3">Total</th>
@@ -25,41 +25,59 @@
         </tr>
       </thead>
       <tbody>
-        @foreach($orders as $order)
-        <tr class="border-t hover:bg-gray-50">
+        @foreach($orders->sortByDesc('created_at')->sortBy(function($order) {
+            return $order->status === 'complete' ? 1 : 0;
+        }) as $order)
+        <tr class="border-t hover:bg-gray-50 {{ $order->status === 'complete' ? 'bg-gray-100 text-gray-500' : '' }}">
           <td class="p-3 font-medium text-blue-600">{{ $order->order_code }}</td>
           <td class="p-3">{{ $order->user->name }}</td>
           <td class="p-3">{{ $order->user->address }}</td>
           <td class="p-3">{{ $order->created_at->format('d M Y') }}</td>
 
+          {{-- Product --}}
           <td class="p-3">
-            <ul class="space-y-1">
-              @foreach($order->orderItems as $item)
-              <li>{{ $item->product->name ?? 'N/A' }}</li>
+            <ul>
+              @foreach($order->orderItems as $index => $item)
+                <li>{{ $item->product->name ?? 'N/A' }}</li>
+                @if($index < $order->orderItems->count() - 1)
+                  <hr class="my-1 border-t border-gray-300">
+                @endif
               @endforeach
             </ul>
           </td>
 
+          {{-- Category --}}
           <td class="p-3">
-            <ul class="space-y-1">
-              @foreach($order->orderItems as $item)
-              <li>{{ $item->product->category->name ?? 'N/A' }}</li>
+            <ul>
+              @foreach($order->orderItems as $index => $item)
+                <li>{{ $item->product->category->name ?? 'N/A' }}</li>
+                @if($index < $order->orderItems->count() - 1)
+                  <hr class="my-1 border-t border-gray-300">
+                @endif
               @endforeach
             </ul>
           </td>
 
+          {{-- Brand --}}
           <td class="p-3">
-            <ul class="space-y-1">
-              @foreach($order->orderItems as $item)
-              <li>{{ $item->product->merk->name ?? 'N/A' }}</li>
+            <ul>
+              @foreach($order->orderItems as $index => $item)
+                <li>{{ $item->product->merk->name ?? 'N/A' }}</li>
+                @if($index < $order->orderItems->count() - 1)
+                  <hr class="my-1 border-t border-gray-300">
+                @endif
               @endforeach
             </ul>
           </td>
 
+          {{-- Quantity --}}
           <td class="p-3">
-            <ul class="space-y-1">
-              @foreach($order->orderItems as $item)
-              <li>{{ $item->quantity }}</li>
+            <ul>
+              @foreach($order->orderItems as $index => $item)
+                <li>{{ $item->quantity }}</li>
+                @if($index < $order->orderItems->count() - 1)
+                  <hr class="my-1 border-t border-gray-300">
+                @endif
               @endforeach
             </ul>
           </td>
@@ -97,7 +115,7 @@
                   'waiting' => 'bg-yellow-200 text-yellow-800',
                   'processing' => 'bg-blue-200 text-blue-800',
                   'sent' => 'bg-purple-200 text-purple-800',
-                  'complete' => 'bg-green-200 text-green-800',
+                  'complete' => 'bg-gray-300 text-gray-600',
                   'rejected' => 'bg-red-200 text-red-800',
                 ];
               @endphp
