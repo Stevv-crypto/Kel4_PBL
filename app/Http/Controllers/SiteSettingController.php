@@ -16,12 +16,14 @@ class SiteSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'site_name'   => 'nullable|string',
-            'copyright'   => 'nullable|string',
-            'address'     => 'nullable|string',
-            'email'       => 'nullable|email',
-            'phone'       => 'nullable|string',
-        ]);
+    'site_name'   => 'nullable|string',
+    'description' => 'nullable|string',
+    'copyright'   => 'nullable|string',
+    'address'     => 'nullable|string',
+    'email'       => 'nullable|email',
+    'phone'       => 'nullable|string',
+]);
+
 
         SiteSetting::updateOrCreate(['id' => 1], $data);
 

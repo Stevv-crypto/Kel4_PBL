@@ -18,6 +18,12 @@
                     </h3>
                     <div class="w-12 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full group-hover:w-16 transition-all duration-300"></div>
                 </div>
+                @if (!empty(optional($setting)->description))
+    <p class="text-gray-400 text-sm leading-relaxed mt-2 text-justify">
+        {{ $setting->description }}
+    </p>
+@endif
+
             </div>
             
             <!-- Contact Info -->
@@ -105,7 +111,7 @@
             </div>
         </div>
         
-        <!-- Copyright Section -->
+        <!-- Copyright -->
         <div class="relative pt-8 mt-8 border-t border-gradient-to-r from-transparent via-white/20 to-transparent">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             <div class="text-center">

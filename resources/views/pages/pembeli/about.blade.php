@@ -13,23 +13,25 @@
     </div>
 
     <!-- Company Introduction -->
-    <div class="flex flex-col md:flex-row items-center justify-between px-10 py-10 max-w-6xl mx-auto">
-      <div class="text-justify max-w-2xl mb-6 md:mb-0">
-        <h1 class="text-3xl font-bold mb-4 text-gray-800">About E-TechnoCart</h1>
-        <p class="text-gray-600 leading-relaxed mb-4">
-          E-TechnoCart is a technology company engaged in the sale and distribution of modern electronic products. We provide a wide range of products from televisions, laptops, smartphones, smart home devices, to high-quality electronic accessories.
-        </p>
-        <p class="text-gray-600 leading-relaxed mb-4">
-          With a focus on customer convenience and trust, E-TechnoCart aims to deliver a safe, fast, and reliable online electronics shopping experience.
-        </p>
-        <p class="text-gray-600 leading-relaxed">
-          We are committed to continuously innovating and becoming the best technology partner for all Indonesians.
-        </p>
-      </div>
-      <div class="ml-0 md:ml-6 max-w-md w-full">
-        <img src="{{ asset('image/POLIBATAM.jpg') }}" alt="Electronics Company" class="rounded-lg shadow-md w-full object-cover" />
-      </div>
-    </div>
+<div class="flex flex-col md:flex-row items-center justify-between px-10 py-14 max-w-6xl mx-auto bg-white rounded-xl shadow-md">
+  <div class="text-justify max-w-2xl mb-8 md:mb-0">
+    <h1 class="text-4xl font-bold mb-6 text-gray-800">About E-TechnoCart</h1>
+    <p class="text-gray-700 text-justify leading-relaxed mb-5">
+      E-TechnoCart is a technology company engaged in the sale and distribution of modern electronic products. We provide a wide range of products from televisions, laptops, smartphones, smart home devices, to high-quality electronic accessories.
+    </p>
+    <p class="text-gray-700 text-justify leading-relaxed mb-5">
+      With a focus on customer convenience and trust, E-TechnoCart aims to deliver a safe, fast, and reliable online electronics shopping experience.
+    </p>
+    <p class="text-gray-700 text-justify leading-relaxed">
+      We are committed to continuously innovating and becoming the best technology partner for all Indonesians.
+    </p>
+  </div>
+  <div class="ml-0 md:ml-10 w-full max-w-md">
+    <img src="{{ asset('image/POLIBATAM.jpg') }}" alt="Electronics Company"
+         class="rounded-xl shadow-lg w-full object-cover transition duration-300 hover:scale-105 hover:shadow-2xl" />
+  </div>
+</div>
+
 
     <!-- Vision & Mission -->
     <div class="bg-gray-100 py-10 mt-6">

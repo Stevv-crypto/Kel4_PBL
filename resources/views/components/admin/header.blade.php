@@ -84,27 +84,6 @@
       </div>
       </div>
 
-      <!-- Profile & Dropdown -->
-      <div class="relative">
-        <button id="user-menu-button" class="flex items-center focus:outline-none">
-          <div class="h-8 w-8 overflow-hidden rounded-full bg-gray-300">
-            <img class="h-full w-full object-cover" src="https://ui-avatars.com/api/?name=Admin" alt="Avatar">
-          </div>
-          <span class="ml-2 text-sm font-medium text-gray-700 hidden sm:block">#</span>
-          <svg class="h-5 w-5 text-gray-700 hidden sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-
-        <!-- Dropdown menu -->
-        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden">
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Account</a>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log out</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Mobile Search -->
   <div class="px-4 pb-3 sm:hidden">
     <div class="relative">

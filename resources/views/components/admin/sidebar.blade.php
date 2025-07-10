@@ -61,15 +61,10 @@
             <ul class="space-y-2">
                 <li>
                     <a href="{{ route('sales.report') }}"
-                       class="flex items-center p-3 rounded-lg {{ request()->routeIs('sales') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
-                        <i class="fas fa-chart-line mr-3"></i> Sales Report
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('team.index') }}"
-                       class="flex items-center p-3 rounded-lg {{ request()->routeIs('team.index') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
-                        <i class="fas fa-users mr-3"></i> Team
-                    </a>
+   class="flex items-center p-3 rounded-lg {{ request()->routeIs('sales.report') ? 'text-white bg-[#4880FF]' : 'text-gray-700 hover:bg-[#4880FF]' }}">
+    <i class="fas fa-chart-line mr-3"></i> Sales Report
+</a>
+
                 </li>
                 <li>
                     <a href="{{ route('settings.edit') }}"
