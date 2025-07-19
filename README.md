@@ -51,6 +51,8 @@ Berikut adalah presentasi video yang menjelaskan detail pengembangan aplikasi E-
 Berikut adalah video demo yang menjelaskan detail pengembangan aplikasi E-TechnoCart:
 👉 https://youtu.be/HKqsIZ8rCFI?si=j948zELiteziV31- [Klik untuk menyaksikan video demo]
 
+---
+
 # Tech
 Aplikasi ini dibangun dengan menggunakan:
 - XAMPP -> Aplikasi XAMPP merupakan sebuah paket perangkat lunak (Software) komputer yang berfungsi sebagai server lokal untuk mengampu jenis data website yang sedang dalam proses pengembangan
