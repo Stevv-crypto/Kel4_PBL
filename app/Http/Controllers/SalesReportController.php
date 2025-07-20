@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\product;
 use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\SalesReport;
