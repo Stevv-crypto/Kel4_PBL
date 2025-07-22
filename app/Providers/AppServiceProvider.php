@@ -44,6 +44,9 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('waitingOrders', $waitingOrders);
         });
-    
+
+         if ($this->app->environment('local')) {
+            $this->app->register(\App\Providers\BroadcastServiceProvider::class);
+        }
     }
 }

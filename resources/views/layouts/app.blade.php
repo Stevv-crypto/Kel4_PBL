@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     @stack('styles')
     @livewireStyles
+    @vite(['resources/js/app.js'])
 
     <title>@yield('title', 'E-TechnoCart')</title>
 </head>
@@ -31,7 +32,15 @@
     @stack('scripts')
     @livewireScripts
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+
+    @auth
+        <script>
+            window.userId = @json(auth()->user()->id);
+        </script>
+    @endauth
+
 </body>
 
 </html>

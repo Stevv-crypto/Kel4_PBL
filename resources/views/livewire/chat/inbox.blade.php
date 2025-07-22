@@ -1,5 +1,5 @@
 <div x-data="{type:'all',query:@entangle('query')}"
-    x-init="setTimeOut(()=>{
+    x-init="setTimeout(()=>{
     conversationElement = document.getElementById('conversation-'+query);
 
     // Scroll ke elemen
@@ -7,7 +7,14 @@
         conversationElement.scrollIntoView({'behavior':'smooth'})
     }
     }
-    ),200;"
+    ,200);
+    
+    Echo.private('users.{{Auth()->User()->id}}')
+        .notification((notification)=>{
+            if(notification['type']=='App\\Notifications\\MessageRead'||notification['type']=='App\\Notifications\\MessageSent'){
+                window.Livewire.emit('refresh');
+            }g
+        });"
     class="flex flex-col transition-all h-full overflow-hidden">
     <header class="sticky z-10 w-full px-3 py-2 top-0 bg-white">
         <div class="justify-between flex items-center border-b">
